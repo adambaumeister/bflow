@@ -13,6 +13,8 @@ class mac_table:
                 self.ports[entry.port].append(entry)
             else:
                 self.ports[entry.port] = [entry]
+            return True
+        return False
     def delete_mac(self,mac): 
         if mac in self.table:
             entry = self.table[mac]

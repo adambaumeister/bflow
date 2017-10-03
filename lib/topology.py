@@ -27,7 +27,13 @@ class topology:
         l = Link(peer=peer_switch)
         local_switch.add_peer_link(l,local_port)
         self.links[link_id] = l
-        self.calc_l2_forwarding() 
+        self.calc_l2_forwarding()
+    # Add a mac to the topology and learn it on the local switch
+    def add_mac(self,id,mac,port): 
+        switch = self.get_switch(id)
+        added = switch.learn_mac(mac,port)
+        if added: 
+            self.calc_l2_forwarding()  
     # Linkhandler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
         switch = self.get_switch(dp_id) 
@@ -54,8 +60,11 @@ class topology:
     # Calculate the l2 forwarding tables
     def calc_l2_forwarding(self):
         for id,switch in self.switches.items():
+            # Push the tables to peer switches
             for local_port,Link in switch.get_peer_links().iteritems():
                 switch.learn_table(Link.peer.mac_table,local_port)
+            # Write the local tables
+            switch.push_all_flows() 
 """
 Link
     An absract link object, contains contains information specific to the link and other details 

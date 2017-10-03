@@ -60,8 +60,8 @@ class ofnetwork(app_manager.RyuApp):
             chassis_id = self.proto_lldp.get_id(l)
             self.topo.add_link(switch.id,chassis_id,port)
             return  
-        switch.learn_mac(mac,port)
-        switch.push_all_flows()  
+        self.topo.add_mac(switch.id,mac,port)
+        #switch.push_all_flows()  
     # Retreive the source mac from a packet
     def get_src_mac(self, ev):
         # Parse the packet from the raw data

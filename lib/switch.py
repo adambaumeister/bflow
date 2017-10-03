@@ -48,10 +48,11 @@ class switch:
         mod = self.parser.OFPFlowMod(datapath=dp, priority=0,match=match, instructions=inst)
         dp.send_msg(mod)
     # Add a mac -> port mapping to this switchesMAC address table
-    def learn_mac(self,mac,port): 
+    def learn_mac(self,mac,port):
         table = self.mac_table 
         entry = table.entry(mac,port)
-        table.add(entry)
+        added = table.add(entry)
+        return added
     # Delete all flows matching this mac address from this switch
     def unlearn_mac(self,mac):
         entry = self.mac_table.delete_mac(mac)
