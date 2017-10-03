@@ -12,7 +12,13 @@ class mac_table:
             if entry.port in self.ports:    
                 self.ports[entry.port].append(entry)
             else:
-                self.ports[entry.port] = [entry]   
+                self.ports[entry.port] = [entry]
+    def delete_mac(self,mac): 
+        if mac in self.table:
+            entry = self.table[mac]
+            print "Debug: " + entry.mac 
+            self.table.pop(mac,None)
+            return entry  
     def dump(self):
         print "dumping MAC table..."
         for key,e in self.table.iteritems(): 

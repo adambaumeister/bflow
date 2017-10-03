@@ -52,6 +52,11 @@ class switch:
         table = self.mac_table 
         entry = table.entry(mac,port)
         table.add(entry)
+    # Delete all flows matching this mac address from this switch
+    def unlearn_mac(self,mac):
+        entry = self.mac_table.delete_mac(mac)
+        if entry: 
+            self.flow_delete(entry)  
     # Lean an entire table
     def learn_table(self,mac_table,port):
         print "Learning table"
@@ -112,9 +117,12 @@ class switch:
     # Mark a port down and remove all associated flows 
     def port_down(self,port):
         print "Port down : " + str(port)
+        dropped_macs = [] 
         dropped_entries = self.mac_table.drop_port(port)
         for entry in dropped_entries: 
-            self.flow_delete(entry)  
+            self.flow_delete(entry)
+            dropped_macs.append(entry.mac)
+        return dropped_macs    
     # Run protocols
     def protocol_enable(self,module):
         m = module(self)

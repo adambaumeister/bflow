@@ -28,7 +28,7 @@ class topology:
         local_switch.add_peer_link(l,local_port)
         self.links[link_id] = l
         self.calc_l2_forwarding() 
-    # Linkdown handler, can be a p2p port or an edge port
+    # Linkhandler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
         switch = self.get_switch(dp_id) 
         ofproto = switch.ofproto
@@ -38,10 +38,16 @@ class topology:
             link_down = (msg.desc.state & ofproto.OFPPS_LINK_DOWN)
             if link_down:
                 # Delete flows from the local switch
-                switch.port_down(msg.desc.port_no)
+                dropped_macs = switch.port_down(msg.desc.port_no)
+                # Delete this mac from the topology 
+                self.drop_macs(dropped_macs)
         elif msg.reason == ofproto.OFPPR_ADD:
             print "Port Add"
- 
+    # Unlearn mac(s) from the topology
+    def drop_macs(self,macs):
+        for mac in macs: 
+            for id,switch in self.switches.items(): 
+                switch.unlearn_mac(mac)  
     def dump(self):
         for id,switch in self.switches.items():
             print "Topology has : " + str(id)
