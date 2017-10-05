@@ -7,9 +7,15 @@ class topology:
     def __init__(self,name):
         self.name = name
         self.switches = {}
-        self.links = {} 
+        self.links = {}
+        self.link_switch_map = {} 
     # Add a switch to the layer 2 topology, requires a lib.switch object
     def add_switch(self,switch):
+        # if switch exists re-init it
+        if switch.id in self.switches:
+            for link_id in self.link_switch_map[switch.id]:
+                print "Switch reinit: deleted {0}".format(link_id)  
+                self.links.pop(link_id)  
         self.switches[switch.id] = switch
         print "added switch " + str(switch.id)
     # Retrieve switch object    
@@ -28,6 +34,11 @@ class topology:
         local_switch.add_peer_link(l,local_port)
         self.links[link_id] = l
         self.calc_l2_forwarding()
+        if local_switch_id in self.link_switch_map: 
+            self.link_switch_map[local_switch_id].append(link_id)
+        else: 
+            self.link_switch_map[local_switch_id] = [link_id] 
+             
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port): 
         switch = self.get_switch(id)
