@@ -3,12 +3,14 @@ Topology
 Represents a full Openflow network topology 
 Handles forwarding between switches, and the provisioning of routed services
 """
+import networkx as nx
 class topology: 
     def __init__(self,name):
         self.name = name
         self.switches = {}
         self.links = {}
-        self.link_switch_map = {} 
+        self.link_switch_map = {}
+        self.l2_neighbors = {}  
     # Add a switch to the layer 2 topology, requires a lib.switch object
     def add_switch(self,switch):
         # if switch exists re-init it
@@ -30,15 +32,15 @@ class topology:
             return  
         local_switch = self.get_switch(local_switch_id)
         peer_switch = self.get_switch(peer_switch_id)
-        l = Link(peer=peer_switch)
+        l = Link(peer=peer_switch,local_port=local_port)
         local_switch.add_peer_link(l,local_port)
         self.links[link_id] = l
+        self.l2_neighbors[local_switch_id] = peer_switch_id
         self.calc_l2_forwarding()
         if local_switch_id in self.link_switch_map: 
             self.link_switch_map[local_switch_id].append(link_id)
         else: 
             self.link_switch_map[local_switch_id] = [link_id] 
-             
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port): 
         switch = self.get_switch(id)
@@ -70,6 +72,11 @@ class topology:
             print "Topology has : " + str(id)
     # Calculate the l2 forwarding tables
     def calc_l2_forwarding(self):
+        for lid,pid in self.l2_neighbors.items(): 
+            local_switch = self.get_switch(lid)
+            peer_switch = self.get_switch(pid)
+        #    for link in local_switch.links_by_peer(pid): 
+        #        print "{0} neighbor with {1} on {2}".format(lid,pid,link.local_port)
         for id,switch in self.switches.items():
             # Push the tables to peer switches
             for local_port,Link in switch.get_peer_links().iteritems():
@@ -84,6 +91,22 @@ class Link:
     def __init__(self,**kwargs):
         self.speed = 1000
         self.ofp_port = ''
-        self.peer = ''  
+        self.peer = ''
+        self.local_port = ''  
         for k,v in kwargs.items():
-            self.__dict__[k] = v  
+            self.__dict__[k] = v 
+"""
+Path
+    An abstract object representing a path (list of node ids seperated by Link objects) between two endpoints 
+"""
+class Path:
+    def __init__(self,nodes): 
+        self.nodes = nodes
+        g = nx.Graph()  
+        for node in self.nodes.keys():
+            for peer in self.nodes[node]:
+                g.add_edge(node,peer, distance=1)
+        self.graph = g  
+    def spf(self,start,end):
+        print  nx.dijkstra_path_length(self.graph, start, end, 'distance')
+        print  nx.dijkstra_path(self.graph, start, end, 'distance')

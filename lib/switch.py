@@ -132,5 +132,13 @@ class switch:
     # Add a peer link (link to another switch...) to this switch
     def add_peer_link(self,Link,port):
         self.peer_links[port] = Link
+    # Return links per peer
+    def links_by_peer(self,peer_id):
+        links = [] 
+        for link in self.get_peer_links().values():
+            if int(link.peer.id) == int(peer_id): 
+                print "Debug: " + str(peer_id) + str(link.peer.id) 
+                links.append(link)
+        return links 
     def get_peer_links(self):
         return self.peer_links
