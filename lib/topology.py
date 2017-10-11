@@ -10,20 +10,22 @@ class topology:
         self.switches = {}
         self.links = {}
         self.link_switch_map = {}
-        self.l2_neighbors = {}  
+        self.l2_neighbors = {}
+
     # Add a switch to the layer 2 topology, requires a lib.switch object
     def add_switch(self,switch):
         # if switch exists re-init it
         if switch.id in self.switches:
-            #for link_id in self.link_switch_map[switch.id]:
             print "Switch reinit: deleted {0}".format(switch.id)  
         self.switches[switch.id] = switch
         print "added switch " + str(switch.id)
+
     # Retrieve switch object    
     def get_switch(self,id):
         id = int(id) 
         return self.switches[id]
-    # Add a link between devices 
+
+    # Add a link between devices
     def add_link(self,local_switch_id,peer_switch_id,local_port):
         link_id = 'l{0}{1}{2}'.format(local_switch_id,peer_switch_id,local_port)
         # Don't add links that have already been added, silly
@@ -34,12 +36,14 @@ class topology:
         l = Link(local_switch_id,peer_switch_id,local_port)
         self.links[link_id] = l
         self.calc_l2_forwarding()
+
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port): 
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
         if added: 
-            self.calc_l2_forwarding()  
+            self.calc_l2_forwarding()
+
     # Linkhandler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
         switch = self.get_switch(dp_id) 
@@ -55,21 +59,28 @@ class topology:
                 self.drop_macs(dropped_macs)
         elif msg.reason == ofproto.OFPPR_ADD:
             print "Port Add"
+
     # Unlearn mac(s) from the topology
     def drop_macs(self,macs):
         for mac in macs: 
             for id,switch in self.switches.items(): 
-                switch.unlearn_mac(mac)  
+                switch.unlearn_mac(mac)
+
     def dump(self):
         for id,switch in self.switches.items():
             print "Topology has : " + str(id)
+
     # Calculate the l2 forwarding tables
     def calc_l2_forwarding(self):
-        print "not yet implemented..." 
+        print "not yet implemented..."
+
+
 """
 Link
     An absract link object, contains contains information specific to the link and other details 
 """
+
+
 class Link:
     def __init__(self,local_id,remote_id,local_port,**kwargs):
         self.speed = 1000
@@ -77,11 +88,15 @@ class Link:
         self.remote_id = remote_id
         self.local_port = local_port
         for k,v in kwargs.items():
-            self.__dict__[k] = v 
+            self.__dict__[k] = v
+
+
 """
 Path
     An abstract object representing a path (list of node ids seperated by Link objects) between two endpoints 
 """
+
+
 class Path:
     def __init__(self,links): 
         self.links = links 
