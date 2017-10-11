@@ -15,9 +15,8 @@ class topology:
     def add_switch(self,switch):
         # if switch exists re-init it
         if switch.id in self.switches:
-            for link_id in self.link_switch_map[switch.id]:
-                print "Switch reinit: deleted {0}".format(link_id)  
-                self.links.pop(link_id)  
+            #for link_id in self.link_switch_map[switch.id]:
+            print "Switch reinit: deleted {0}".format(switch.id)  
         self.switches[switch.id] = switch
         print "added switch " + str(switch.id)
     # Retrieve switch object    
@@ -32,15 +31,9 @@ class topology:
             return  
         local_switch = self.get_switch(local_switch_id)
         peer_switch = self.get_switch(peer_switch_id)
-        l = Link(peer=peer_switch,local_port=local_port)
-        local_switch.add_peer_link(l,local_port)
+        l = Link(local_switch_id,peer_switch_id,local_port)
         self.links[link_id] = l
-        self.l2_neighbors[local_switch_id] = peer_switch_id
         self.calc_l2_forwarding()
-        if local_switch_id in self.link_switch_map: 
-            self.link_switch_map[local_switch_id].append(link_id)
-        else: 
-            self.link_switch_map[local_switch_id] = [link_id] 
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port): 
         switch = self.get_switch(id)
@@ -72,27 +65,17 @@ class topology:
             print "Topology has : " + str(id)
     # Calculate the l2 forwarding tables
     def calc_l2_forwarding(self):
-        for lid,pid in self.l2_neighbors.items(): 
-            local_switch = self.get_switch(lid)
-            peer_switch = self.get_switch(pid)
-        #    for link in local_switch.links_by_peer(pid): 
-        #        print "{0} neighbor with {1} on {2}".format(lid,pid,link.local_port)
-        for id,switch in self.switches.items():
-            # Push the tables to peer switches
-            for local_port,Link in switch.get_peer_links().iteritems():
-                switch.learn_table(Link.peer.mac_table,local_port)
-            # Write the local tables
-            switch.push_all_flows() 
+        print "not yet implemented..." 
 """
 Link
     An absract link object, contains contains information specific to the link and other details 
 """
 class Link:
-    def __init__(self,**kwargs):
+    def __init__(self,local_id,remote_id,local_port,**kwargs):
         self.speed = 1000
-        self.ofp_port = ''
-        self.peer = ''
-        self.local_port = ''  
+        self.local_id = local_id
+        self.remote_id = remote_id
+        self.local_port = local_port
         for k,v in kwargs.items():
             self.__dict__[k] = v 
 """
@@ -100,13 +83,22 @@ Path
     An abstract object representing a path (list of node ids seperated by Link objects) between two endpoints 
 """
 class Path:
-    def __init__(self,nodes): 
-        self.nodes = nodes
+    def __init__(self,links): 
+        self.links = links 
         g = nx.Graph()  
-        for node in self.nodes.keys():
-            for peer in self.nodes[node]:
-                g.add_edge(node,peer, distance=1)
-        self.graph = g  
-    def spf(self,start,end):
-        print  nx.dijkstra_path_length(self.graph, start, end, 'distance')
-        print  nx.dijkstra_path(self.graph, start, end, 'distance')
+        for link in self.links:
+            g.add_edge(link.local_id,link.remote_id, object=link)
+        self.graph = g
+    # Run the spf algorithm and return all the links in the path  
+    def spf_links(self,start,end):
+        #print  nx.dijkstra_path_length(self.graph, start, end, 'speed')
+        #print  nx.dijkstra_path(self.graph, start, end, 'speed')
+        index = 0
+        nodes = nx.dijkstra_path(self.graph,start,end) 
+        for node in nodes: 
+            index += 1
+            if index < len(nodes): 
+                peer = nodes[index]
+                print "{0} {1}".format(node,peer)  
+                obj = self.graph.get_edge_data(node,peer) 
+                print obj['object'].local_port
