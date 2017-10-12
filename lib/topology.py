@@ -29,16 +29,23 @@ class topology:
     # Add a link between devices
     def add_link(self,local_switch_id,peer_switch_id,local_port):
         l = Link(local_switch_id,peer_switch_id,local_port)
-        # If this link hasn't been created already
-        if local_switch_id not in self.link_ref[peer_switch_id]:
+        # If the peer switch already has at least one link associated with it
+        if peer_switch_id in self.link_ref:
+            # If this link hasn't been created already
+            if local_switch_id not in self.link_ref[peer_switch_id]:
+                l = Link(local_switch_id, peer_switch_id, local_port)
+                self.path.add_link(l)
+                self.link_ref[local_switch_id][peer_switch_id] = l
+            # Otherwise, grab the link object and add this switch as the other port on the other side
+            else:
+                l = self.link_ref[peer_switch_id][local_switch_id]
+                l.add_port(local_switch_id, local_port)
+        # Otherwise, must be the first link for the remote node
+        else:
             l = Link(local_switch_id, peer_switch_id, local_port)
             self.path.add_link(l)
             self.link_ref[local_switch_id][peer_switch_id] = l
-            self.calc_l2_forwarding()
-        # Otherwise, grab the link object and add this switch as the other port on the other side
-        else:
-            l = self.link_ref[peer_switch_id][local_switch_id]
-            l.add_port(local_switch_id, local_port)
+            #self.calc_l2_forwarding()
 
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port): 
