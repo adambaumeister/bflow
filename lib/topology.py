@@ -29,7 +29,8 @@ class topology:
 
     # Add a link between devices
     def add_link(self,local_switch_id,peer_switch_id,local_port):
-        pprint.pprint(self.link_ref)
+        local_switch_id = str(local_switch_id)
+        peer_switch_id = str(peer_switch_id)
         l = Link(local_switch_id,peer_switch_id,local_port)
         # If the peer switch already has at least one link associated with it
         if peer_switch_id in self.link_ref:
