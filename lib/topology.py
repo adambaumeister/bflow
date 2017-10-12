@@ -94,6 +94,7 @@ class Link:
 """
 Path
     An abstract object representing a path (list of node ids seperated by Link objects) between two endpoints 
+    spaghetti
 """
 
 
