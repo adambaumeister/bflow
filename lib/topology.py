@@ -73,7 +73,8 @@ class topology:
             for id2, switch2 in self.switches.items():
                 if id != id2:
                     try:
-                        links = self.path.spf_links(str(id),str(id2))
+                        link = self.path.next_hop(str(id), str(id2))
+                        print link.local_port
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
 
@@ -130,5 +131,9 @@ class Path:
                 print "{0} {1}".format(node,peer)
                 obj = self.graph.get_edge_data(node,peer)
                 links.append(obj)
-                #print obj['object'].local_port
         return links
+
+    # Run the SPF algorithm but just return the next hop link
+    def next_hop(self,start,end):
+        links = self.spf_links(start, end)
+        return links[0]
