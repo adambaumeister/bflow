@@ -73,7 +73,7 @@ class topology:
             for id2, switch2 in self.switches.items():
                 if id != id2:
                     try:
-                        links = self.path.spf_links(id2,id)
+                        links = self.path.spf_links(str(id),str(id2))
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
 
@@ -88,8 +88,8 @@ class Link:
     def __init__(self,local_id,remote_id,local_port,**kwargs):
         self.link_id = 'l{0}{1}{2}'.format(local_id, remote_id, local_port)
         self.speed = 1000
-        self.local_id = local_id
-        self.remote_id = remote_id
+        self.local_id = str(local_id)
+        self.remote_id = str(remote_id)
         self.local_port = local_port
         for k,v in kwargs.items():
             self.__dict__[k] = v
