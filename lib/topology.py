@@ -42,6 +42,9 @@ class topology:
                 l.add_port(local_switch_id, local_port)
         # Otherwise, must be the first link for the remote node
         else:
+            if local_switch_id not in self.link_ref:
+                self.link_ref[local_switch_id] = {}
+
             l = Link(local_switch_id, peer_switch_id, local_port)
             self.path.add_link(l)
             self.link_ref[local_switch_id][peer_switch_id] = l
