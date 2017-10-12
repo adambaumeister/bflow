@@ -74,9 +74,9 @@ class topology:
                 if id != id2:
                     try:
                         link = self.path.next_hop(str(id), str(id2))
-                        print link.local_port
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
+                        print e.message
 
 
 """
@@ -136,4 +136,5 @@ class Path:
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
         links = self.spf_links(start, end)
+        print links[1][object]
         return links[0][object]
