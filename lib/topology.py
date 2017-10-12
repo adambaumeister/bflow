@@ -119,7 +119,7 @@ class Path:
             return
         self.links[link.link_id] = link
         edge_object = {}
-        self.graph.add_edge(link.local_id, link.remote_id, n1=link, n2=link)
+        self.graph.add_edge(link.local_id, link.remote_id, object=link)
         print "added edge: {0}{1}".format(link.local_id, link.remote_id)
 
     # Run the spf algorithm and return all the links in the path
@@ -137,7 +137,7 @@ class Path:
                 peer = nodes[index]
                 print "{0} {1}".format(node,peer)
                 obj = self.graph.get_edge_data(node,peer)
-                links.append(obj['ns1'])
+                links.append(obj['object'])
         return links
 
     # Run the SPF algorithm but just return the next hop link
