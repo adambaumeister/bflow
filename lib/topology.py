@@ -103,7 +103,7 @@ class topology:
                 if id != id2:
                     try:
                         link = self.path.next_hop(str(id), str(id2))
-                        print "id {0} to id {1} next hop port".format(id, id2)
+                        print "id {0} to id {1} next hop port".format(id, id2, link.ports)
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
                         print e.message
