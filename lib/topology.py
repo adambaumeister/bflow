@@ -119,7 +119,11 @@ class Path:
         #print  nx.dijkstra_path(self.graph, start, end, 'speed')
         links = []
         index = 0
-        nodes = nx.dijkstra_path(self.graph,start,end) 
+        try:
+            nodes = nx.dijkstra_path(self.graph,start,end)
+        except nx.NetworkXNoPath as e:
+            print e.message
+            return
         for node in nodes: 
             index += 1
             if index < len(nodes): 
