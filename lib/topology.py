@@ -4,6 +4,7 @@ Represents a full Openflow network topology
 Handles forwarding between switches, and the provisioning of routed services
 """
 import networkx as nx
+import pprint
 class topology: 
     def __init__(self,name):
         self.name = name
@@ -28,6 +29,7 @@ class topology:
 
     # Add a link between devices
     def add_link(self,local_switch_id,peer_switch_id,local_port):
+        pprint.pprint(self.link_ref)
         l = Link(local_switch_id,peer_switch_id,local_port)
         # If the peer switch already has at least one link associated with it
         if peer_switch_id in self.link_ref:
