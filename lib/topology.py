@@ -31,6 +31,7 @@ class topology:
         l = Link(local_switch_id,peer_switch_id,local_port)
         # If the peer switch already has at least one link associated with it
         if peer_switch_id in self.link_ref:
+            print "Existing entry for {0} ({1})".format(local_switch_id, peer_switch_id)
             # If this link hasn't been created already
             if local_switch_id not in self.link_ref[peer_switch_id]:
                 l = Link(local_switch_id, peer_switch_id, local_port)
@@ -42,6 +43,7 @@ class topology:
                 l.add_port(local_switch_id, local_port)
         # Otherwise, must be the first link for the remote node
         else:
+            print "No existing entry for {0} {1}".format(local_switch_id,peer_switch_id)
             if local_switch_id not in self.link_ref:
                 self.link_ref[local_switch_id] = {}
 
