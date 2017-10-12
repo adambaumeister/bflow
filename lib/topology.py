@@ -44,7 +44,7 @@ class topology:
         if added: 
             self.calc_l2_forwarding()
 
-    # Linkhandler, can be a p2p port or an edge port
+    # Link handler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
         switch = self.get_switch(dp_id) 
         ofproto = switch.ofproto
@@ -72,7 +72,11 @@ class topology:
 
     # Calculate the l2 forwarding tables
     def calc_l2_forwarding(self):
-        print "not yet implemented..."
+        p = Path(self.links)
+        for id,switch in self.switches.items():
+            for id2, switch2 in self.switches.items():
+                if id != id2:
+                    links = p.spf_links(id,id2)
 
 
 """
@@ -94,7 +98,6 @@ class Link:
 """
 Path
     An abstract object representing a path (list of node ids seperated by Link objects) between two endpoints 
-    spaghetti
 """
 
 
@@ -109,12 +112,15 @@ class Path:
     def spf_links(self,start,end):
         #print  nx.dijkstra_path_length(self.graph, start, end, 'speed')
         #print  nx.dijkstra_path(self.graph, start, end, 'speed')
+        links = []
         index = 0
         nodes = nx.dijkstra_path(self.graph,start,end) 
         for node in nodes: 
             index += 1
             if index < len(nodes): 
                 peer = nodes[index]
-                print "{0} {1}".format(node,peer)  
-                obj = self.graph.get_edge_data(node,peer) 
-                print obj['object'].local_port
+                #print "{0} {1}".format(node,peer)
+                obj = self.graph.get_edge_data(node,peer)
+                links.append(obj)
+                #print obj['object'].local_port
+        return links
