@@ -17,12 +17,14 @@ nodes2 = {
     'n1' : ['n2','n2'] 
 }
 l1 = Link('n1','n2',1)  
-#l2 = Link('n2','n1',2) 
+l2 = Link('n2','n1',2)
 l3 = Link('n2','n3',1) 
 #l4 = Link('n3','n2',2) 
 #links = [l1,l2,l3,l4]  
 links = [l1,l3]  
 #for k,v in nodes.items(): 
 #    print "{0} {1}".format(k,v) 
-p = Path(links)
+p = Path()
+p.add_link(l1)
+p.add_link(l2)
 p.spf_links('n1','n3') 
