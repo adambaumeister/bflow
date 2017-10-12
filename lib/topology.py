@@ -8,9 +8,9 @@ class topology:
     def __init__(self,name):
         self.name = name
         self.switches = {}
-        self.links = {}
         self.link_switch_map = {}
         self.l2_neighbors = {}
+        self.path = Path()
 
     # Add a switch to the layer 2 topology, requires a lib.switch object
     def add_switch(self,switch):
@@ -27,14 +27,10 @@ class topology:
 
     # Add a link between devices
     def add_link(self,local_switch_id,peer_switch_id,local_port):
-        link_id = 'l{0}{1}{2}'.format(local_switch_id,peer_switch_id,local_port)
-        # Don't add links that have already been added, silly
-        if link_id in self.links:
-            return  
-        local_switch = self.get_switch(local_switch_id)
-        peer_switch = self.get_switch(peer_switch_id)
+        #local_switch = self.get_switch(local_switch_id)
+        #peer_switch = self.get_switch(peer_switch_id)
         l = Link(local_switch_id,peer_switch_id,local_port)
-        self.links[link_id] = l
+        self.path.add_link(l)
         self.calc_l2_forwarding()
 
     # Add a mac to the topology and learn it on the local switch
@@ -73,7 +69,6 @@ class topology:
 
     # Calculate the l2 forwarding tables
     def calc_l2_forwarding(self):
-        p = Path(self.links)
         for id,switch in self.switches.items():
             for id2, switch2 in self.switches.items():
                 if id != id2:
@@ -91,6 +86,7 @@ Link
 
 class Link:
     def __init__(self,local_id,remote_id,local_port,**kwargs):
+        self.link_id = 'l{0}{1}{2}'.format(local_id, remote_id, local_port)
         self.speed = 1000
         self.local_id = local_id
         self.remote_id = remote_id
@@ -106,17 +102,20 @@ Path
 
 
 class Path:
-    def __init__(self,links):
-        self.links = links
+    def __init__(self):
+        self.links = {}
         g = nx.Graph()  
-        for id,link in self.links.items():
-            g.add_edge(link.local_id,link.remote_id, object=link)
-            print "added edge: {0}{1}".format(link.local_id,link.remote_id)
         self.graph = g
+
+    def add_link(self,link):
+        if link.link_id in self.links:
+            return
+        self.links[link.link_id] = link
+        g.add_edge(link.local_id, link.remote_id, object=link)
+        print "added edge: {0}{1}".format(link.local_id, link.remote_id)
+
     # Run the spf algorithm and return all the links in the path  
     def spf_links(self,start,end):
-        #print  nx.dijkstra_path_length(self.graph, start, end, 'speed')
-        #print  nx.dijkstra_path(self.graph, start, end, 'speed')
         links = []
         index = 0
         try:
