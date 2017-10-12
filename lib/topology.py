@@ -73,7 +73,7 @@ class topology:
             for id2, switch2 in self.switches.items():
                 if id != id2:
                     try:
-                        links = p.spf_links(id,id2)
+                        links = self.path.spf_links(id,id2)
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
 
@@ -111,7 +111,7 @@ class Path:
         if link.link_id in self.links:
             return
         self.links[link.link_id] = link
-        g.add_edge(link.local_id, link.remote_id, object=link)
+        self.graph.add_edge(link.local_id, link.remote_id, object=link)
         print "added edge: {0}{1}".format(link.local_id, link.remote_id)
 
     # Run the spf algorithm and return all the links in the path  
