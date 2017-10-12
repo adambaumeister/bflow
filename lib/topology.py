@@ -47,11 +47,14 @@ class topology:
             print "Port deleted"
         elif msg.reason == ofproto.OFPPR_MODIFY:
             link_down = (msg.desc.state & ofproto.OFPPS_LINK_DOWN)
+            link_up = (msg.desc.state & ofproto.OFPPS_LINK_UP)
             if link_down:
                 # Delete flows from the local switch
                 dropped_macs = switch.port_down(msg.desc.port_no)
                 # Delete this mac from the topology 
                 self.drop_macs(dropped_macs)
+            if link_up:
+                print "Link came up!"
         elif msg.reason == ofproto.OFPPR_ADD:
             print "Port Add"
 
