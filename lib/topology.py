@@ -57,6 +57,7 @@ class topology:
             self.path.add_link(l)
             self.link_ref[local_switch_id][peer_switch_id] = l
             #self.calc_l2_forwarding()
+        print "PORT " + l.ports[local_switch_id]
 
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port): 
