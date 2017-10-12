@@ -136,4 +136,4 @@ class Path:
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
         links = self.spf_links(start, end)
-        return links[0]
+        return links[0][object]
