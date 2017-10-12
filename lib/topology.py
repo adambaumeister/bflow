@@ -115,7 +115,7 @@ class Path:
         self.graph.add_edge(link.local_id, link.remote_id, object=link)
         print "added edge: {0}{1}".format(link.local_id, link.remote_id)
 
-    # Run the spf algorithm and return all the links in the path  
+    # Run the spf algorithm and return all the links in the path
     def spf_links(self,start,end):
         links = []
         index = 0
@@ -136,5 +136,4 @@ class Path:
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
         links = self.spf_links(start, end)
-        print links[1][object]
         return links[0][object]
