@@ -42,7 +42,8 @@ class topology:
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
         if added: 
-            self.calc_l2_forwarding()
+            #self.calc_l2_forwarding()
+            print "Do nothing with learned mac, temporary, we have to wait for links to come up"
 
     # Link handler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
@@ -76,7 +77,10 @@ class topology:
         for id,switch in self.switches.items():
             for id2, switch2 in self.switches.items():
                 if id != id2:
-                    links = p.spf_links(id,id2)
+                    try:
+                        links = p.spf_links(id,id2)
+                    except KeyError as e:
+                        print "No path between {0} and {1}!".format(id,id2)
 
 
 """
@@ -102,7 +106,7 @@ Path
 
 
 class Path:
-    def __init__(self,links): 
+    def __init__(self,links):
         self.links = links 
         g = nx.Graph()  
         for link in self.links:
