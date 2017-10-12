@@ -107,9 +107,9 @@ Path
 
 class Path:
     def __init__(self,links):
-        self.links = links 
+        self.links = links
         g = nx.Graph()  
-        for link in self.links:
+        for id,link in self.links.items():
             g.add_edge(link.local_id,link.remote_id, object=link)
             print "added edge: {0}{1}".format(link.local_id,link.remote_id)
         self.graph = g
