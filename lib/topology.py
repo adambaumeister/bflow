@@ -158,6 +158,8 @@ class Path:
     def spf_links(self,start,end):
         links = []
         index = 0
+        start = str(start)
+        end = str(end)
         try:
             nodes = nx.dijkstra_path(self.graph,start,end)
         except nx.NetworkXNoPath as e:
