@@ -9,6 +9,7 @@ class topology:
         self.name = name
         self.switches = {}
         self.link_switch_map = {}
+        self.link_ref = {}
         self.l2_neighbors = {}
         self.path = Path()
 
