@@ -127,8 +127,8 @@ class Path:
             index += 1
             if index < len(nodes): 
                 peer = nodes[index]
-                #print "{0} {1}".format(node,peer)
-                #obj = self.graph.get_edge_data(node,peer)
-                #links.append(obj)
+                print "{0} {1}".format(node,peer)
+                obj = self.graph.get_edge_data(node,peer)
+                links.append(obj)
                 #print obj['object'].local_port
         return links
