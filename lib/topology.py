@@ -73,7 +73,7 @@ class topology:
             for id2, switch2 in self.switches.items():
                 if id != id2:
                     try:
-                        links = self.path.spf_links(id,id2)
+                        links = self.path.spf_links(id2,id)
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
 
