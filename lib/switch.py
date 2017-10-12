@@ -47,26 +47,30 @@ class switch:
         inst = [self.parser.OFPInstructionActions(self.ofproto.OFPIT_APPLY_ACTIONS,actions)]
         mod = self.parser.OFPFlowMod(datapath=dp, priority=0,match=match, instructions=inst)
         dp.send_msg(mod)
+
     # Add a mac -> port mapping to this switchesMAC address table
     def learn_mac(self,mac,port):
         table = self.mac_table 
         entry = table.entry(mac,port)
         added = table.add(entry)
         return added
+
     # Delete all flows matching this mac address from this switch
     def unlearn_mac(self,mac):
         entry = self.mac_table.delete_mac(mac)
         if entry: 
-            self.flow_delete(entry)  
+            self.flow_delete(entry)
+
     # Lean an entire table
     def learn_table(self,mac_table,port):
         print "Learning table"
         mac_table.dump() 
         for mac,entry in mac_table.get_entries().iteritems():
-    #        print "Learnt {0} {1}".format(mac,entry.port)  
-            self.learn_mac(mac,port) 
+            self.learn_mac(mac,port)
+
     def push_all_flows(self): 
-        self.macs_to_switch() 
+        self.macs_to_switch()
+
     def macs_to_switch(self):
         dp = self.datapath
         ofproto = dp.ofproto
@@ -85,6 +89,7 @@ class switch:
                 e.cookie = self.cookie 
                 self.cookie += 1 
                 print "Added flow (cookie: {0}".format(str(self.cookie))
+
     # Flood the provided event packet to all ports (except the one it was received on) 
     def flood(self,ev,passed_in_port):
         actions = []
@@ -105,6 +110,7 @@ class switch:
         dp.send_msg(mod)
         # Mark this port as having a flood rule configured already
         self.flooded[passed_in_port] = True
+
     # Delete a flow
     def flow_delete(self,entry): 
         dp = self.datapath
@@ -114,7 +120,8 @@ class switch:
         mod = parser.OFPFlowMod(datapath=dp, cookie=entry.cookie,cookie_mask=255,command=self.ofproto.OFPFC_DELETE
                                 , instructions=inst,match=match, out_port=entry.port, out_group=self.ofproto.OFPG_ANY)
         dp.send_msg(mod)
-        print "Deleted cookie: {0} port: {1} ".format(str(entry.cookie),str(entry.port))  
+        print "Deleted cookie: {0} port: {1} ".format(str(entry.cookie),str(entry.port))
+
     # Mark a port down and remove all associated flows 
     def port_down(self,port):
         print "Port down : " + str(port)
@@ -123,15 +130,18 @@ class switch:
         for entry in dropped_entries: 
             self.flow_delete(entry)
             dropped_macs.append(entry.mac)
-        return dropped_macs    
+        return dropped_macs
+
     # Run protocols
     def protocol_enable(self,module):
         m = module(self)
         thread = hub.spawn(m.start)
         return(m)
+
     # Add a peer link (link to another switch...) to this switch
     def add_peer_link(self,Link,port):
         self.peer_links[port] = Link
+
     # Return links per peer
     def links_by_peer(self,peer_id):
         links = [] 
@@ -139,6 +149,7 @@ class switch:
             if int(link.peer.id) == int(peer_id): 
                 print "Debug: " + str(peer_id) + str(link.peer.id) 
                 links.append(link)
-        return links 
+        return links
+
     def get_peer_links(self):
         return self.peer_links

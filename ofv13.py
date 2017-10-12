@@ -33,6 +33,7 @@ class ofnetwork(app_manager.RyuApp):
         # Enable protocols 
         self.proto_lldp = s.protocol_enable(LLDP) 
         self.topo.add_switch(s)
+
     # Handle port status changes
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
     def port_status_handler(self, ev): 
@@ -41,7 +42,8 @@ class ofnetwork(app_manager.RyuApp):
         ofp = dp.ofproto 
         #switch = self.topo.get_switch(dp.id)
         #switch.port_change(msg)
-        self.topo.link_change(dp.id,msg)  
+        self.topo.link_change(dp.id,msg)
+
     # Send each packet through the processors we have 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def dispatch(self, ev):

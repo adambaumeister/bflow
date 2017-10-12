@@ -27,8 +27,6 @@ class topology:
 
     # Add a link between devices
     def add_link(self,local_switch_id,peer_switch_id,local_port):
-        #local_switch = self.get_switch(local_switch_id)
-        #peer_switch = self.get_switch(peer_switch_id)
         l = Link(local_switch_id,peer_switch_id,local_port)
         self.path.add_link(l)
         self.calc_l2_forwarding()
@@ -91,9 +89,17 @@ class Link:
         self.speed = 1000
         self.local_id = str(local_id)
         self.remote_id = str(remote_id)
+        self.ports = {}
+        self.ports[local_id] = local_port
         self.local_port = local_port
         for k,v in kwargs.items():
             self.__dict__[k] = v
+
+    """
+    Add an id -> port mapping to this link object
+    """
+    def add_port(self, local_id, port):
+        self.ports[local_id] = port
 
 
 """
@@ -112,7 +118,8 @@ class Path:
         if link.link_id in self.links:
             return
         self.links[link.link_id] = link
-        self.graph.add_edge(link.local_id, link.remote_id, object=link)
+        edge_object = {}
+        self.graph.add_edge(link.local_id, link.remote_id, n1=link, n2=link)
         print "added edge: {0}{1}".format(link.local_id, link.remote_id)
 
     # Run the spf algorithm and return all the links in the path
@@ -136,5 +143,4 @@ class Path:
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
         links = self.spf_links(start, end)
-        print links[0].local_port
         return links[0]
