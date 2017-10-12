@@ -130,10 +130,11 @@ class Path:
                 peer = nodes[index]
                 print "{0} {1}".format(node,peer)
                 obj = self.graph.get_edge_data(node,peer)
-                links.append(obj)
+                links.append(obj[object])
         return links
 
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
         links = self.spf_links(start, end)
-        return links
+        print links[0].local_port
+        return links[0]
