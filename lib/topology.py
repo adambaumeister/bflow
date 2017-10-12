@@ -56,8 +56,8 @@ class topology:
             l = Link(local_switch_id, peer_switch_id, local_port)
             self.path.add_link(l)
             self.link_ref[local_switch_id][peer_switch_id] = l
-            #self.calc_l2_forwarding()
-        print "PORT " + l.ports[local_switch_id]
+
+        self.calc_l2_forwarding()
 
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port): 
@@ -103,6 +103,7 @@ class topology:
                 if id != id2:
                     try:
                         link = self.path.next_hop(str(id), str(id2))
+                        print "id {0} to id {1} next hop port = {2}".format(id, id2, link.ports[id])
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
                         print e.message
