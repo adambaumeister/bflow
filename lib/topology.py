@@ -107,6 +107,7 @@ class Path:
         g = nx.Graph()  
         for link in self.links:
             g.add_edge(link.local_id,link.remote_id, object=link)
+            print "added edge: {0}{1}".format(link.local_id,link.remote_id)
         self.graph = g
     # Run the spf algorithm and return all the links in the path  
     def spf_links(self,start,end):
@@ -120,7 +121,7 @@ class Path:
             if index < len(nodes): 
                 peer = nodes[index]
                 #print "{0} {1}".format(node,peer)
-                obj = self.graph.get_edge_data(node,peer)
-                links.append(obj)
+                #obj = self.graph.get_edge_data(node,peer)
+                #links.append(obj)
                 #print obj['object'].local_port
         return links
