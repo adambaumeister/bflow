@@ -67,7 +67,7 @@ class switch:
     # Lean an entire table
     def learn_table(self,mac_table,port):
         print "Learning table on port {0}".format(port)
-        for mac,entry in mac_table.get_local_entries().iteritems():
+        for mac,entry in mac_table.get_local_entries():
             print "{0} : {1}".format(mac, port)
             self.learn_mac(mac, port, remote=True)
 
