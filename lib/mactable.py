@@ -45,7 +45,7 @@ class mac_table:
     def drop_port(self,port):
         # Hack below: ovs sends duplicate port down messages?
         removed = [] 
-        if port in  self.ports: 
+        if port in self.ports:
             for entry in self.ports[port]:  
                 self.table.pop(entry.mac, None)
                 print "Dropped : " + entry.mac 
@@ -57,7 +57,7 @@ class mac_table:
     # MAC table entry
     class entry:
         # Create a table entry
-        def __init__(self, mac,port):
+        def __init__(self, mac, port):
             self.installed = False 
             self.mac = mac
             self.port = port
