@@ -49,9 +49,12 @@ class switch:
         dp.send_msg(mod)
 
     # Add a mac -> port mapping to this switchesMAC address table
-    def learn_mac(self, mac, port):
+    def learn_mac(self, mac, port, remote=False):
         table = self.mac_table 
         entry = table.entry(mac, port)
+        # Flag this entry as not local to us
+        if remote:
+            entry.remote = True
         added = table.add(entry)
         return added
 
@@ -64,9 +67,9 @@ class switch:
     # Lean an entire table
     def learn_table(self,mac_table,port):
         print "Learning table on port {0}".format(port)
-        mac_table.dump() 
-        for mac,entry in mac_table.get_entries().iteritems():
-            self.learn_mac(mac, port)
+        for mac,entry in mac_table.get_local_entries().iteritems():
+            print "{0} : {1}".format(mac, port)
+            self.learn_mac(mac, port, remote=True)
 
     def push_all_flows(self): 
         self.macs_to_switch()

@@ -35,6 +35,13 @@ class mac_table:
     def get_entries(self): 
         return self.table
 
+    def get_local_entries(self):
+        entries = []
+        for mac, entry in self.table.items():
+            if not entry.remote:
+                entries.append(entry)
+        return entries
+
     def drop_port(self,port):
         # Hack below: ovs sends duplicate port down messages?
         removed = [] 
@@ -55,8 +62,10 @@ class mac_table:
             self.mac = mac
             self.port = port
             self.cookie = 0
+            self.remote = False
 
         # Set installed flag
         def install(self): 
-            self.installed = True   
+            self.installed = True
+
 
