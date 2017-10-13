@@ -5,11 +5,12 @@ from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, arp,lldp 
-from lib.mactable import mac_table
-from lib.topology import topology  
+from lib.topology import topology
 from lib.switch import switch 
 from lib.protocols.lldp import LLDP  
 import pprint
+
+
 # Define your class which is a RYU application
 class ofnetwork(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -25,7 +26,7 @@ class ofnetwork(app_manager.RyuApp):
     # In the below case we are registering switch_features_handler to be enacted during the CONFIG_DISPATCHER phase
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
-        # Datapath is very important: describes the switch that SENT this message and is a ryu.controller.controller.Datapath object
+        # Datapath is very important: describes the switch that SENT this message
         # ie you can specify ev.msg.datapath.sendmsg to send a message to this specific switch
         datapath = ev.msg.datapath
         # init switch matching this one
@@ -49,6 +50,7 @@ class ofnetwork(app_manager.RyuApp):
     def dispatch(self, ev):
         self.layer2(ev)
         self.arp(ev)
+
     # Layer 2 handling
     def layer2(self, ev):
         mac = self.get_src_mac(ev)
@@ -63,7 +65,7 @@ class ofnetwork(app_manager.RyuApp):
             self.topo.add_link(switch.id,chassis_id,port)
             return  
         self.topo.add_mac(switch.id,mac,port)
-        #switch.push_all_flows()  
+
     # Retreive the source mac from a packet
     def get_src_mac(self, ev):
         # Parse the packet from the raw data
@@ -72,17 +74,19 @@ class ofnetwork(app_manager.RyuApp):
         # Might need to extend these classes...
         eth = p.get_protocol(ethernet.ethernet)
         return eth.src
+
     # Retrieve the input port from a packetin event
     def get_in_port(self, ev): 
         match = ev.msg.match
         port = match.get("in_port")
         return port
+
     # Handle arp requests
-    def arp(self, ev):
+    def arp(self ,ev):
         dp = ev.msg.datapath
         p = packet.Packet(ev.msg.data)
         a = p.get_protocol(arp.arp)
         if a: 
             in_port = self.get_in_port(ev)
             switch = self.topo.get_switch(dp.id)
-            switch.flood(ev,in_port)  
+            switch.flood(ev, in_port)

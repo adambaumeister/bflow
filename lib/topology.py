@@ -64,7 +64,6 @@ class topology:
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
         if added: 
-            switch.learn_mac(mac, port)
             switch.push_all_flows()
 
     # Link handler, can be a p2p port or an edge port
@@ -110,6 +109,7 @@ class topology:
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
                         print e.message
+                    switch.push_all_flows()
 
 
 """
