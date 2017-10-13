@@ -5,7 +5,8 @@ class mac_table:
     def __init__(self):
         self.table = {}
         self.ports = {}  
-        self.flooded = {}  
+        self.flooded = {}
+
     def add(self, entry):
         if entry.mac not in self.table: 
             self.table[entry.mac] = entry
@@ -15,20 +16,25 @@ class mac_table:
                 self.ports[entry.port] = [entry]
             return True
         return False
+
     def delete_mac(self,mac): 
         if mac in self.table:
             entry = self.table[mac]
             print "Debug: " + entry.mac 
             self.table.pop(mac,None)
-            return entry  
+            return entry
+
     def dump(self):
         print "dumping MAC table..."
         for key,e in self.table.iteritems(): 
             print "{0} : {1}".format(e.mac,e.port)
+
     def get_ports(self):
-        return self.ports.keys()  
+        return self.ports.keys()
+
     def get_entries(self): 
         return self.table
+
     def drop_port(self,port):
         # Hack below: ovs sends duplicate port down messages?
         removed = [] 
@@ -39,7 +45,8 @@ class mac_table:
                 self.dump() 
                 removed.append(entry)  
             self.ports.pop(port, None)
-        return removed 
+        return removed
+
     # MAC table entry
     class entry:
         # Create a table entry
@@ -47,7 +54,8 @@ class mac_table:
             self.installed = False 
             self.mac = mac
             self.port = port
-            self.cookie = 0 
+            self.cookie = 0
+
         # Set installed flag
         def install(self): 
             self.installed = True   

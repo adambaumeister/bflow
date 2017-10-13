@@ -64,8 +64,8 @@ class topology:
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
         if added: 
-            #self.calc_l2_forwarding()
-            print "Do nothing with learned mac, temporary, we have to wait for links to come up"
+            switch.learn_mac(mac, port)
+            switch.push_all_flows()
 
     # Link handler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
@@ -103,7 +103,10 @@ class topology:
                 if id != id2:
                     try:
                         link = self.path.next_hop(str(id), str(id2))
-                        print "id {0} to id {1} next hop port {2}".format(id, id2, link.ports[str(id)])
+                        local_port = link.ports[str(id)]
+                        switch.learn_table(switch2.mac_table, local_port)
+                        #print "id {0} to id {1} next hop port {2}".format(id, id2, link.ports[str(id)])
+                    # Below is a little dangerous as we catch any key error, it's just a shortcut for now
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
                         print e.message
