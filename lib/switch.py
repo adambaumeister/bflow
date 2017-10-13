@@ -69,8 +69,6 @@ class switch:
         print "Learning table on port {0}".format(port)
         for entry in mac_table.get_local_entries():
             mac = entry.mac
-            port = entry.port
-            print "{0} : {1}".format(mac, port)
             self.learn_mac(mac, port, remote=True)
 
     def push_all_flows(self): 
