@@ -99,6 +99,8 @@ class topology:
 
     # Calculate the l2 forwarding tables
     def calc_l2_forwarding(self):
+        # Calc the broadcast forwarding first
+
         for id,switch in self.switches.items():
             for id2, switch2 in self.switches.items():
                 if id != id2:
@@ -178,6 +180,19 @@ class Path:
                 obj = self.graph.get_edge_data(node,peer)
                 links.append(obj['object'])
         return links
+
+    # Calculate the single "loop free" path through the network
+    def loop_free_path(self):
+        pairs = nx.all_pairs_dijkstra()
+        lf_path = []
+        longest_path = 0
+        for start_node in pairs.keys():
+            for end_node in pairs[start_node].keys():
+                path_length = len(pairs[start_node][end_node])
+                if path_length > longest_path:
+                    lf_path = pairs[start_node][end_node]
+                    longest_path = path_length
+        return lf_path
 
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
