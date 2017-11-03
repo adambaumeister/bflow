@@ -176,23 +176,38 @@ class Path:
             index += 1
             if index < len(nodes): 
                 peer = nodes[index]
-                print "{0} {1}".format(node,peer)
-                obj = self.graph.get_edge_data(node,peer)
+                obj = self.graph.get_edge_data(node, peer)
                 links.append(obj['object'])
         return links
 
     # Calculate the single "loop free" path through the network
     def loop_free_path(self):
-        pairs = nx.all_pairs_dijkstra()
+        pairs = nx.all_pairs_shortest_path(self.graph, 5)
         lf_path = []
+        lf_path_links = []
         longest_path = 0
+        pprint.pprint(pairs)
         for start_node in pairs.keys():
             for end_node in pairs[start_node].keys():
                 path_length = len(pairs[start_node][end_node])
                 if path_length > longest_path:
                     lf_path = pairs[start_node][end_node]
                     longest_path = path_length
+                elif len(pairs[start_node]) == 1:
+                    obj = self.graph.get_edge_data(start_node, end_node)
+                    lf_path_links.append(obj)
         return lf_path
+
+    def test_nx(self):
+        G = nx.path_graph(self.graph)
+        pairs = nx.all_pairs_dijkstra_path(G)
+        longest_path = 0
+        # NEARLY THERE!!!
+        for node, paths in sorted(pairs):
+            for peer, path in paths:
+                print path
+                path_length = len(path)
+                print str(path_length)
 
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
