@@ -157,7 +157,7 @@ class Link:
         self.ports[local_id] = port
 
     def get_port_id(self, id):
-        if id in ports:
+        if id in self.ports:
             return self.ports[id]
 
 
