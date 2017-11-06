@@ -119,17 +119,18 @@ class topology:
         # Calc the broadcast forwarding
         for id,switch in self.switches.items():
             link = self.path.next_hop(str(id),str(self.root_bridge))
-            local_switch_id = link.local_id
-            local_switch = self.get_switch(local_switch_id)
-            local_port = link.ports[str(local_switch_id)]
+            if link:
+                local_switch_id = link.local_id
+                local_switch = self.get_switch(local_switch_id)
+                local_port = link.ports[str(local_switch_id)]
 
-            remote_switch_id = link.remote_id
-            remote_port = link.ports[str(remote_switch_id)]
-            remote_switch = self.get_switch(remote_switch_id)
+                remote_switch_id = link.remote_id
+                remote_port = link.ports[str(remote_switch_id)]
+                remote_switch = self.get_switch(remote_switch_id)
 
-            self.get_switch(remote_switch_id)
-            local_switch.enable_broadcast(local_port)
-            remote_switch.enable_broadcast(remote_port)
+                self.get_switch(remote_switch_id)
+                local_switch.enable_broadcast(local_port)
+                remote_switch.enable_broadcast(remote_port)
 
 
 """
@@ -233,4 +234,5 @@ class Path:
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
         links = self.spf_links(start, end)
-        return links[0]
+        if len(links) > 0:
+            return links[0]
