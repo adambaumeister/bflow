@@ -125,12 +125,11 @@ class topology:
                 local_port = link.ports[str(local_switch_id)]
 
                 remote_switch_id = link.remote_id
-                remote_port = link.ports[str(remote_switch_id)]
-                remote_switch = self.get_switch(remote_switch_id)
-
-                self.get_switch(remote_switch_id)
-                local_switch.enable_broadcast(local_port)
-                remote_switch.enable_broadcast(remote_port)
+                remote_port = link.get_port_id(remote_switch_id)
+                if remote_port:
+                    remote_switch = self.get_switch(remote_switch_id)
+                    local_switch.enable_broadcast(local_port)
+                    remote_switch.enable_broadcast(remote_port)
 
 
 """
@@ -156,6 +155,10 @@ class Link:
     """
     def add_port(self, local_id, port):
         self.ports[local_id] = port
+
+    def get_port_id(self, id):
+        if id in ports:
+            return self.ports[id]
 
 
 """
