@@ -21,8 +21,8 @@ class topology:
         if switch.id in self.switches:
             print "Switch reinit: deleted {0}".format(switch.id)
         # No smart root bridge election - just pick the one
-        if switch.root_bridge == '':
-            switch.root_bridge = switch.id
+        if self.root_bridge == '':
+            self.root_bridge = switch.id
         self.switches[switch.id] = switch
         print "added switch " + str(switch.id)
 
