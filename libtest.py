@@ -1,6 +1,8 @@
 #!/usr/bin/python
 from lib.topology import topology, Link, Path
-
+"""
+n1---n2---n3---n4
+"""
 t = topology("spaghett")
 p = Path()
 l1 = Link("n1", "n2", 1)

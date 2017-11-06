@@ -114,6 +114,10 @@ class switch:
         # Mark this port as having a flood rule configured already
         self.flooded[passed_in_port] = True
 
+    # Forward broadcasts on the provided port
+    def enable_broadcast(self, port):
+        print "Enabling port {0} on {1}".format(port,self.id)
+
     # Delete a flow
     def flow_delete(self,entry): 
         dp = self.datapath
