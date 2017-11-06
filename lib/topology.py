@@ -103,7 +103,20 @@ class topology:
 
     # Calculate the l2 forwarding tables
     def calc_l2_forwarding(self):
-        # Calc the broadcast forwarding first
+        for id,switch in self.switches.items():
+            for id2, switch2 in self.switches.items():
+                if id != id2:
+                    try:
+                        link = self.path.next_hop(str(id), str(id2))
+                        local_port = link.ports[str(id)]
+                        switch.learn_table(switch2.mac_table, local_port)
+                    # Below is a little dangerous as we catch any key error, it's just a shortcut for now
+                    except KeyError as e:
+                        print "No path between {0} and {1}!".format(id,id2)
+                        print e.message
+                    switch.push_all_flows()
+
+        # Calc the broadcast forwarding
         for id,switch in self.switches.items():
             link = self.path.next_hop(str(id),str(self.root_bridge))
             local_switch_id = link.local_id
@@ -117,19 +130,6 @@ class topology:
             self.get_switch(remote_switch_id)
             local_switch.enable_broadcast(local_port)
             remote_switch.enable_broadcast(remote_port)
-
-        for id,switch in self.switches.items():
-            for id2, switch2 in self.switches.items():
-                if id != id2:
-                    try:
-                        link = self.path.next_hop(str(id), str(id2))
-                        local_port = link.ports[str(id)]
-                        switch.learn_table(switch2.mac_table, local_port)
-                    # Below is a little dangerous as we catch any key error, it's just a shortcut for now
-                    except KeyError as e:
-                        print "No path between {0} and {1}!".format(id,id2)
-                        print e.message
-                    switch.push_all_flows()
 
 
 """
