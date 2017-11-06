@@ -13,12 +13,16 @@ class topology:
         self.link_ref = {}
         self.l2_neighbors = {}
         self.path = Path()
+        self.root_bridge = ''
 
     # Add a switch to the layer 2 topology, requires a lib.switch object
     def add_switch(self,switch):
         # if switch exists re-init it
         if switch.id in self.switches:
-            print "Switch reinit: deleted {0}".format(switch.id)  
+            print "Switch reinit: deleted {0}".format(switch.id)
+        # No smart root bridge election - just pick the one
+        if switch.root_bridge == '':
+            switch.root_bridge = switch.id
         self.switches[switch.id] = switch
         print "added switch " + str(switch.id)
 
@@ -102,13 +106,13 @@ class topology:
         # Calc the broadcast forwarding first
 
         for id,switch in self.switches.items():
+            self.path.next_hop(str(id),str(self.root_bridge))
             for id2, switch2 in self.switches.items():
                 if id != id2:
                     try:
                         link = self.path.next_hop(str(id), str(id2))
                         local_port = link.ports[str(id)]
                         switch.learn_table(switch2.mac_table, local_port)
-                        #print "id {0} to id {1} next hop port {2}".format(id, id2, link.ports[str(id)])
                     # Below is a little dangerous as we catch any key error, it's just a shortcut for now
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
@@ -210,8 +214,8 @@ class Path:
                 path_length = len(path)
                 if path_length > longest_path:
                     longest = path
+                    print node + peer + str(longest)
                     longest_path = path_length
-        print str(longest)
         return longest
 
     # Run the SPF algorithm but just return the next hop link
