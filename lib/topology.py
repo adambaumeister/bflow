@@ -159,7 +159,7 @@ class Link:
     def get_port_id(self, id):
         if id in self.ports:
             return self.ports[id]
-
+#
 
 """
 Path
