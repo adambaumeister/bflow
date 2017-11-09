@@ -6,6 +6,7 @@ class mac_table:
         self.table = {}
         self.ports = {}  
         self.flooded = {}
+        self.broadcast_enabled = {}
 
     def add(self, entry):
         if entry.mac not in self.table: 
@@ -34,6 +35,13 @@ class mac_table:
 
     def get_entries(self): 
         return self.table
+
+    def enable_broadcast(self, port):
+        self.broadcast_enabled[port] = True
+
+    def is_broadcast_enabled(self, port):
+        if port in self.broadcast_enabled:
+            return True
 
     def get_local_entries(self):
         entries = []

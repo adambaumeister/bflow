@@ -103,9 +103,10 @@ class switch:
             in_port = passed_in_port,
             eth_dst = 'ff:ff:ff:ff:ff:ff'
         )
-        #! Need to improve this, currently keeps track of connected hosts via mac table
+        # Need to improve this, currently keeps track of connected hosts via mac table
         for port in self.mac_table.get_ports():
-            if port != passed_in_port:
+            # Only output to ports that have broadcasts enabled
+            if port != passed_in_port and self.mac_table.is_broadcast_enabled(port):
                 a = self.parser.OFPActionOutput(port)
                 actions.append(a)
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,actions)]
@@ -117,7 +118,8 @@ class switch:
     # Forward broadcasts on the provided port
     def enable_broadcast(self, port):
         print "Enabling port {0} on {1}".format(port,self.id)
-        self.flood(port)
+        self.mac_table.enable_broadcast(port)
+        #self.flood(port)
 
     # Delete a flow
     def flow_delete(self,entry): 
