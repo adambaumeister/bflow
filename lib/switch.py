@@ -94,7 +94,7 @@ class switch:
                 print "Added flow (cookie: {0}".format(str(self.cookie))
 
     # Flood the provided event packet to all ports (except the one it was received on) 
-    def flood(self,ev,passed_in_port):
+    def flood(self,passed_in_port):
         actions = []
         parser = self.parser
         ofproto = self.ofproto
@@ -117,6 +117,7 @@ class switch:
     # Forward broadcasts on the provided port
     def enable_broadcast(self, port):
         print "Enabling port {0} on {1}".format(port,self.id)
+        self.flood(port)
 
     # Delete a flow
     def flow_delete(self,entry): 

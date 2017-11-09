@@ -89,4 +89,4 @@ class ofnetwork(app_manager.RyuApp):
         if a: 
             in_port = self.get_in_port(ev)
             switch = self.topo.get_switch(dp.id)
-            switch.flood(ev, in_port)
+            switch.flood(in_port)
