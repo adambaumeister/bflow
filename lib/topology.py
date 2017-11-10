@@ -69,6 +69,7 @@ class topology:
     def add_mac(self,id,mac,port): 
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
+        switch.mac_table.enable_broadcast(port)
         if added: 
             switch.push_all_flows()
 
