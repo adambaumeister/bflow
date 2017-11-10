@@ -134,7 +134,7 @@ class topology:
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
             for port in switch.mac_table.get_host_ports():
-                print "spaghetti"
+                print "Port {0} on {1} is host port!".format(port, switch.id)
                 # Now in here have to add the logic to also enable broadcasts on all the other ports!
 
 

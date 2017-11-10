@@ -55,7 +55,6 @@ class mac_table:
         for port in self.ports.keys():
             if len(self.ports[port]) == 1:
                 ports.append(port)
-                print "Port {0} is host port!"
         return ports
 
     def drop_port(self,port):
