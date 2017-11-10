@@ -67,7 +67,7 @@ class topology:
 
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port):
-        print "Got mac {0} on {1}".format(mac,port)
+       # print "Got mac {0} on {1}".format(mac,port)
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
         switch.enable_broadcast(port)
@@ -130,8 +130,8 @@ class topology:
                 remote_port = link.get_port_id(remote_switch_id)
                 if remote_port:
                     remote_switch = self.get_switch(remote_switch_id)
-                    #local_switch.enable_broadcast(local_port)
-                    #remote_switch.enable_broadcast(remote_port)
+                    local_switch.enable_broadcast(local_port)
+                    remote_switch.enable_broadcast(remote_port)
                 # Now in here have to add the logic to also enable broadcasts on all the other ports!
 
 
