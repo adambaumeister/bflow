@@ -70,7 +70,7 @@ class topology:
        # print "Got mac {0} on {1}".format(mac,port)
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
-        switch.enable_broadcast(port)
+        #switch.enable_broadcast(port)
         if added: 
             switch.push_all_flows()
 
