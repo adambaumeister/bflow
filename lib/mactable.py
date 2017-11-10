@@ -56,6 +56,7 @@ class mac_table:
             if int(self.ports[port]) == 1:
                 ports.append(port)
                 print "Port {0} is host port!"
+        return ports
 
     def drop_port(self,port):
         # Hack below: ovs sends duplicate port down messages?
