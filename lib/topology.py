@@ -130,8 +130,8 @@ class topology:
                 remote_port = link.get_port_id(remote_switch_id)
                 if remote_port:
                     remote_switch = self.get_switch(remote_switch_id)
-                    local_switch.enable_broadcast(local_port)
-                    remote_switch.enable_broadcast(remote_port)
+                    #local_switch.enable_broadcast(local_port)
+                    #remote_switch.enable_broadcast(remote_port)
                 # Now in here have to add the logic to also enable broadcasts on all the other ports!
 
 
