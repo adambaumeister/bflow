@@ -72,7 +72,8 @@ class topology:
         added = switch.learn_mac(mac,port)
         #switch.enable_broadcast(port)
         if added: 
-            switch.push_all_flows()
+            #switch.push_all_flows()
+            self.calc_l2_forwarding()
 
     # Link handler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
@@ -132,6 +133,8 @@ class topology:
                     remote_switch = self.get_switch(remote_switch_id)
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
+            for port in switch.mac_table.get_host_ports():
+                print "spaghetti"
                 # Now in here have to add the logic to also enable broadcasts on all the other ports!
 
 
