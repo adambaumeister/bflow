@@ -66,7 +66,8 @@ class topology:
         self.calc_l2_forwarding()
 
     # Add a mac to the topology and learn it on the local switch
-    def add_mac(self,id,mac,port): 
+    def add_mac(self,id,mac,port):
+        print "Got mac {0} on {1}".format(mac,port)
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
         switch.mac_table.enable_broadcast(port)
