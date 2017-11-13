@@ -70,10 +70,8 @@ class topology:
        # print "Got mac {0} on {1}".format(mac,port)
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
-        #switch.enable_broadcast(port)
-        if added: 
+        if added:
             switch.push_all_flows()
-            self.calc_l2_forwarding()
 
     # Link handler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
