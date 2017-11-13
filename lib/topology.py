@@ -120,6 +120,7 @@ class topology:
                     switch.push_all_flows()
 
         # Calc the broadcast forwarding
+        # First enable the ports on the inter-switch links
         for id,switch in self.switches.items():
             link = self.path.next_hop(str(id),str(self.root_bridge))
             if link:
@@ -133,9 +134,9 @@ class topology:
                     remote_switch = self.get_switch(remote_switch_id)
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
+         # Then enable broadcasts on the host ports
+        for id, switch in self.switches.items():
             for port in switch.mac_table.get_host_ports():
-                #print "Port {0} on {1} is host port!".format(port, switch.id)
-                # Now in here have to add the logic to also enable broadcasts on all the other ports!
                 switch.enable_broadcast(port)
 
 
