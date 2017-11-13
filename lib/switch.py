@@ -109,6 +109,8 @@ class switch:
             if port != passed_in_port and self.mac_table.is_broadcast_enabled(port):
                 a = self.parser.OFPActionOutput(port)
                 actions.append(a)
+            else:
+                print "Port {0} is not broadcast enabled".format(port)
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,actions)]
         mod = parser.OFPFlowMod(datapath=dp, priority=1,match=match, instructions=inst)
         dp.send_msg(mod)
