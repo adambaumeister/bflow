@@ -110,7 +110,7 @@ class switch:
                 a = self.parser.OFPActionOutput(port)
                 actions.append(a)
             else:
-                print "Port {0} is not broadcast enabled".format(port)
+                print "Port {0} on {1} is not broadcast enabled".format(port, self.id)
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,actions)]
         mod = parser.OFPFlowMod(datapath=dp, priority=1,match=match, instructions=inst)
         dp.send_msg(mod)
