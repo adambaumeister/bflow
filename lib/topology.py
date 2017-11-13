@@ -62,7 +62,7 @@ class topology:
             self.link_ref[local_switch_id][peer_switch_id] = l
 
         switch = self.get_switch(local_switch_id)
-        switch.add_peer_link(l,local_port)
+        switch.add_peer_link(l, local_port)
         self.calc_l2_forwarding()
 
     # Add a mac to the topology and learn it on the local switch
@@ -73,7 +73,7 @@ class topology:
         #switch.enable_broadcast(port)
         if added: 
             switch.push_all_flows()
-            #self.calc_l2_forwarding()
+            self.calc_l2_forwarding()
 
     # Link handler, can be a p2p port or an edge port
     def link_change(self,dp_id,msg): 
@@ -121,7 +121,7 @@ class topology:
 
         # Calc the broadcast forwarding
         # First enable the ports on the inter-switch links
-        for id,switch in self.switches.items():
+        for id, switch in self.switches.items():
             link = self.path.next_hop(str(id),str(self.root_bridge))
             if link:
                 local_switch_id = link.local_id
@@ -134,7 +134,8 @@ class topology:
                     remote_switch = self.get_switch(remote_switch_id)
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
-         # Then enable broadcasts on the host ports
+
+        # Then enable broadcasts on the host ports
         for id, switch in self.switches.items():
             for port in switch.mac_table.get_host_ports():
                 switch.enable_broadcast(port)
