@@ -106,6 +106,7 @@ class switch:
         # Need to improve this, currently keeps track of connected hosts via mac table
         for port in self.mac_table.get_ports():
             # Only output to ports that have broadcasts enabled
+            # Something wrong with this logic
             if port != passed_in_port and self.mac_table.is_broadcast_enabled(port):
                 a = self.parser.OFPActionOutput(port)
                 actions.append(a)
