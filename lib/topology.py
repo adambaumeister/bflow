@@ -141,7 +141,8 @@ class topology:
         # Install broadcast forwarding rules on host ports
         for id, switch in self.switches.items():
             for port in switch.mac_table.get_host_ports():
-                switch.forward_broadcast(port)
+                print "DEBUG" + port
+                switch.enable_broadcast(port)
 
 
 """
