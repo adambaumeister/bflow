@@ -118,7 +118,12 @@ class topology:
                     switch.push_all_flows()
 
         # Calc the broadcast forwarding
-        # First enable the ports on the inter-switch links
+        # Enable broadcast forwarding OUT hosts ports
+        for id, switch in self.switches.items():
+            for port in switch.mac_table.get_host_ports():
+                switch.forward_broadcast(port)
+
+        # Install broadcast forwarding rules for p2p links
         for id, switch in self.switches.items():
             link = self.path.next_hop(str(id),str(self.root_bridge))
             if link:
@@ -133,10 +138,10 @@ class topology:
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
 
-        # Then enable broadcasts on the host ports
+        # Install broadcast forwarding rules on host ports
         for id, switch in self.switches.items():
             for port in switch.mac_table.get_host_ports():
-                switch.enable_broadcast(port)
+                switch.forward_broadcast(port)
 
 
 """
