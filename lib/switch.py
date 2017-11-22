@@ -125,7 +125,7 @@ class switch:
         self.flood(port)
 
     # Forward broadcasts out port
-    def send_broadcasts(self, port):
+    def forward_broadcast(self, port):
         print "Enabling forwarding of broadcasts port: {0} Switch: {1}".format(port,self.id)
         self.mac_table.enable_broadcast(port)
 
