@@ -38,7 +38,7 @@ class topology:
         l = Link(local_switch_id,peer_switch_id,local_port)
         # If the peer switch already has at least one link associated with it
         if peer_switch_id in self.link_ref:
-            print "Existing entry for {0} ({1})".format(local_switch_id, peer_switch_id)
+            #print "Existing entry for {0} ({1})".format(local_switch_id, peer_switch_id)
             # If this link hasn't been created already
             if local_switch_id not in self.link_ref[peer_switch_id]:
                 l = Link(local_switch_id, peer_switch_id, local_port)
@@ -53,7 +53,7 @@ class topology:
                 self.link_ref[local_switch_id][peer_switch_id] = l
         # Otherwise, must be the first link for the remote node
         else:
-            print "No existing entry for {0} {1}".format(local_switch_id,peer_switch_id)
+            #print "No existing entry for {0} {1}".format(local_switch_id,peer_switch_id)
             if local_switch_id not in self.link_ref:
                 self.link_ref[local_switch_id] = {}
 
@@ -83,6 +83,8 @@ class topology:
             link_down = (msg.desc.state & ofproto.OFPPS_LINK_DOWN)
             link_up = (msg.desc.state & ofproto.OFPPS_LIVE)
             if link_down:
+                if switch.port_type(msg.desc.port_no):
+                    print "Peer link down, recalculate forwarding"
                 # Delete flows from the local switch
                 dropped_macs = switch.port_down(msg.desc.port_no)
                 # Delete this mac from the topology 
@@ -138,7 +140,7 @@ class topology:
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
 
-        # Install broadcast forwarding rules on host ports
+        # Install broadcast forwarding rules for forwarding broadcast IN host ports
         for id, switch in self.switches.items():
             for port in switch.mac_table.get_host_ports():
                 switch.enable_broadcast(port)

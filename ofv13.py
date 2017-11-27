@@ -49,7 +49,6 @@ class ofnetwork(app_manager.RyuApp):
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def dispatch(self, ev):
         self.layer2(ev)
-        #self.arp(ev)
 
     # Layer 2 handling
     def layer2(self, ev):

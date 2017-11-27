@@ -110,9 +110,6 @@ class switch:
             if port != passed_in_port and self.mac_table.is_broadcast_enabled(port):
                 a = self.parser.OFPActionOutput(port)
                 actions.append(a)
-                print "Flooding packets from {2} out {0} on {1}".format(port, self.id, passed_in_port)
-            else:
-                print "Port {0} on {1} is not broadcast enabled: passed_in_port = {2}".format(port, self.id, passed_in_port)
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,actions)]
         mod = parser.OFPFlowMod(datapath=dp, priority=1,match=match, instructions=inst)
         dp.send_msg(mod)
@@ -160,6 +157,13 @@ class switch:
     # Add a peer link (link to another switch...) to this switch
     def add_peer_link(self,Link,port):
         self.peer_links[port] = Link
+
+    # Check if port is a peer link
+    def port_type(self, port):
+        if port in self.peer_links:
+            return True
+        else:
+            return False
 
     # Return links per peer
     def links_by_peer(self,peer_id):
