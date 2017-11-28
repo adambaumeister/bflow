@@ -145,7 +145,9 @@ class switch:
         dropped_entries = self.mac_table.drop_port(port)
         for entry in dropped_entries: 
             self.flow_delete(entry)
-            dropped_macs.append(entry.mac)
+            # Return macs that are local to this switch only
+            if entry.remote:
+                dropped_macs.append(entry.mac)
         return dropped_macs
 
     # Run protocols

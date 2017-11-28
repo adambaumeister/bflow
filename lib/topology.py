@@ -128,7 +128,6 @@ class topology:
         for id, switch in self.switches.items():
             link = self.path.next_hop(str(id),str(self.root_bridge))
             if link:
-                print "Add broadcast link"
                 local_switch_id = link.local_id
                 local_switch = self.get_switch(local_switch_id)
                 local_port = link.ports[str(local_switch_id)]
@@ -140,7 +139,7 @@ class topology:
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
             else:
-                print "No path for broadcasts"
+                print "No path for broadcasts!"
 
         # Install broadcast forwarding rules for forwarding broadcast IN host ports
         for id, switch in self.switches.items():
