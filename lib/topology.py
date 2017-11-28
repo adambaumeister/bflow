@@ -128,6 +128,7 @@ class topology:
         for id, switch in self.switches.items():
             link = self.path.next_hop(str(id),str(self.root_bridge))
             if link:
+                print "Add broadcast link"
                 local_switch_id = link.local_id
                 local_switch = self.get_switch(local_switch_id)
                 local_port = link.ports[str(local_switch_id)]
