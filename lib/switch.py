@@ -118,13 +118,13 @@ class switch:
 
     # Forward broadcasts on the provided port
     def enable_broadcast(self, port):
-        print "Enabling port {0} on {1}".format(port,self.id)
+        #print "Enabling port {0} on {1}".format(port,self.id)
         self.mac_table.enable_broadcast(port)
         self.flood(port)
 
     # Forward broadcasts out port
     def forward_broadcast(self, port):
-        print "Enabling forwarding of broadcasts port: {0} Switch: {1}".format(port,self.id)
+        #print "Enabling forwarding of broadcasts port: {0} Switch: {1}".format(port,self.id)
         self.mac_table.enable_broadcast(port)
 
     # Delete a flow

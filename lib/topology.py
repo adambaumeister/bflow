@@ -116,7 +116,6 @@ class topology:
                     # Below is a little dangerous as we catch any key error, it's just a shortcut for now
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
-                        print e.message
                     switch.push_all_flows()
 
         # Calc the broadcast forwarding
@@ -139,6 +138,8 @@ class topology:
                     remote_switch = self.get_switch(remote_switch_id)
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
+            else:
+                print "No path for broadcasts"
 
         # Install broadcast forwarding rules for forwarding broadcast IN host ports
         for id, switch in self.switches.items():
