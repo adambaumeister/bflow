@@ -103,6 +103,7 @@ class topology:
             print "Topology has : " + str(id)
 
     # Calculate the l2 forwarding tables
+    # This needs a lot of work. Currently clears out all broadcasts before starting again.
     def calc_l2_forwarding(self):
         for id,switch in self.switches.items():
             for id2, switch2 in self.switches.items():
@@ -124,7 +125,6 @@ class topology:
             for port in switch.mac_table.get_host_ports():
                 if not switch.port_is_peer(port):
                     switch.forward_broadcast(port)
-
 
         # Install broadcast forwarding rules for p2p links
         for id, switch in self.switches.items():
