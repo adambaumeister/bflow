@@ -135,6 +135,7 @@ class switch:
     def clear_broadcasts(self):
         for c in self.broadcast_flows:
             self.flow_delete_cookie(c)
+        self.broadcast_flows = []
 
     # Delete a flow
     def flow_delete(self,entry): 
