@@ -38,7 +38,6 @@ class topology:
         l = Link(local_switch_id,peer_switch_id,local_port)
         # If the peer switch already has at least one link associated with it
         if peer_switch_id in self.link_ref:
-            #print "Existing entry for {0} ({1})".format(local_switch_id, peer_switch_id)
             # If this link hasn't been created already
             if local_switch_id not in self.link_ref[peer_switch_id]:
                 l = Link(local_switch_id, peer_switch_id, local_port)
@@ -53,7 +52,6 @@ class topology:
                 self.link_ref[local_switch_id][peer_switch_id] = l
         # Otherwise, must be the first link for the remote node
         else:
-            #print "No existing entry for {0} {1}".format(local_switch_id,peer_switch_id)
             if local_switch_id not in self.link_ref:
                 self.link_ref[local_switch_id] = {}
 
@@ -67,7 +65,6 @@ class topology:
 
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port):
-       # print "Got mac {0} on {1}".format(mac,port)
         switch = self.get_switch(id)
         added = switch.learn_mac(mac,port)
         if added:
@@ -83,12 +80,13 @@ class topology:
             link_down = (msg.desc.state & ofproto.OFPPS_LINK_DOWN)
             link_up = (msg.desc.state & ofproto.OFPPS_LIVE)
             if link_down:
-                if switch.port_type(msg.desc.port_no):
-                    print "Peer link down, recalculate forwarding"
                 # Delete flows from the local switch
                 dropped_macs = switch.port_down(msg.desc.port_no)
                 # Delete this mac from the topology 
                 self.drop_macs(dropped_macs)
+                if switch.port_is_peer(msg.desc.port_no):
+                    print "Peer link down, recalculate forwarding"
+                    self.calc_l2_forwarding()
             if link_up:
                 print "Link came up!"
         elif msg.reason == ofproto.OFPPR_ADD:
