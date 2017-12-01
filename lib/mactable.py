@@ -39,6 +39,9 @@ class mac_table:
     def enable_broadcast(self, port):
         self.broadcast_enabled[port] = True
 
+    def disable_broadcast(self, port):
+        self.broadcast_enabled.pop(port)
+
     def is_broadcast_enabled(self, port):
         if port in self.broadcast_enabled:
             return True

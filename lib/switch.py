@@ -25,6 +25,7 @@ class switch:
         # Configure defaults 
         # id represents the OF switch 64-bit identifier
         self.broadcast_flows = []
+        self.broadcast_ports = []
 
         if dp.id:  
             self.id = dp.id
@@ -130,12 +131,15 @@ class switch:
     def forward_broadcast(self, port):
         #print "Enabling forwarding of broadcasts port: {0} Switch: {1}".format(port,self.id)
         self.mac_table.enable_broadcast(port)
+        self.broadcast_ports.append(port)
 
     # Remove all broadcast rules
     def clear_broadcasts(self):
         for c in self.broadcast_flows:
             self.flow_delete_cookie(c)
         self.broadcast_flows = []
+        for port in self.broadcast_ports:
+            self.mac_table.disable_broadcast(port)
 
     # Delete a flow
     def flow_delete(self,entry): 
