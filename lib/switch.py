@@ -145,7 +145,7 @@ class switch:
         mod = parser.OFPFlowMod(datapath=dp, cookie=entry.cookie,cookie_mask=255,command=self.ofproto.OFPFC_DELETE
                                 , instructions=inst,match=match, out_port=entry.port, out_group=self.ofproto.OFPG_ANY)
         dp.send_msg(mod)
-        print "Deleted cookie: {0} port: {1} ".format(str(entry.cookie),str(entry.port))
+        print "Deleted cookie: {0} ".format(str(c))
 
     # Delete a flow matching a cookie
     def flow_delete_cookie(self, c):
