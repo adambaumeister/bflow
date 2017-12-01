@@ -136,6 +136,7 @@ class topology:
                     remote_switch = self.get_switch(remote_switch_id)
                     local_switch.enable_broadcast(local_port)
                     remote_switch.enable_broadcast(remote_port)
+                    print "Enabling broadcasts on {0} port {1} -> {2} port {3}".format(local_switch_id,local_port,remote_switch_id,remote_port)
             else:
                 print "No path for broadcasts!"
 
