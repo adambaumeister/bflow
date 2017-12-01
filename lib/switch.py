@@ -156,7 +156,7 @@ class switch:
         mod = parser.OFPFlowMod(datapath=dp, cookie=c, cookie_mask=255, command=self.ofproto.OFPFC_DELETE
                                 , instructions=inst, match=match, out_group=self.ofproto.OFPG_ANY)
         dp.send_msg(mod)
-        print "Deleted flow cookie: {0} port: {1} ".format(str(c))
+        print "Deleted flow cookie: {0}".format(str(c))
 
     # Mark a port down and remove all associated flows
     def port_down(self,port):
