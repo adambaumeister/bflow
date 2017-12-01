@@ -120,9 +120,11 @@ class topology:
         # Enable broadcast forwarding OUT hosts ports
         # Also delete the existing broadcast rules for each switch
         for id, switch in self.switches.items():
-            for port in switch.mac_table.get_host_ports():
-                switch.forward_broadcast(port)
             switch.clear_broadcasts()
+            for port in switch.mac_table.get_host_ports():
+                if not switch.port_is_peer(port):
+                    switch.forward_broadcast(port)
+
 
         # Install broadcast forwarding rules for p2p links
         for id, switch in self.switches.items():
