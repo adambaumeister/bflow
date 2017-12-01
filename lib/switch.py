@@ -24,6 +24,8 @@ class switch:
         self.flowtable = {}
         # Configure defaults 
         # id represents the OF switch 64-bit identifier
+        self.broadcast_flows = []
+
         if dp.id:  
             self.id = dp.id
         else: 
@@ -111,12 +113,14 @@ class switch:
                 a = self.parser.OFPActionOutput(port)
                 actions.append(a)
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,actions)]
-        mod = parser.OFPFlowMod(datapath=dp, priority=1,match=match, instructions=inst)
+        mod = parser.OFPFlowMod(datapath=dp, priority=1,match=match, instructions=inst, cookie=self.cookie, cookie_mask=255)
         dp.send_msg(mod)
         # Mark this port as having a flood rule configured already
         self.flooded[passed_in_port] = True
+        self.cookie += 1
+        self.broadcast_flows.append(self.cookie)
 
-    # Forward broadcasts on the provided port
+        # Forward broadcasts on the provided port
     def enable_broadcast(self, port):
         #print "Enabling port {0} on {1}".format(port,self.id)
         self.mac_table.enable_broadcast(port)
@@ -126,6 +130,11 @@ class switch:
     def forward_broadcast(self, port):
         #print "Enabling forwarding of broadcasts port: {0} Switch: {1}".format(port,self.id)
         self.mac_table.enable_broadcast(port)
+
+    # Remove all broadcast rules
+    def clear_broadcasts(self):
+        for c in self.broadcast_flows:
+            self.flow_delete_cookie(c)
 
     # Delete a flow
     def flow_delete(self,entry): 
@@ -138,7 +147,18 @@ class switch:
         dp.send_msg(mod)
         print "Deleted cookie: {0} port: {1} ".format(str(entry.cookie),str(entry.port))
 
-    # Mark a port down and remove all associated flows 
+    # Delete a flow matching a cookie
+    def flow_delete_cookie(self, c):
+        dp = self.datapath
+        parser = self.parser
+        inst = []
+        match = self.parser.OFPMatch()
+        mod = parser.OFPFlowMod(datapath=dp, cookie=c, cookie_mask=255, command=self.ofproto.OFPFC_DELETE
+                                , instructions=inst, match=match, out_group=self.ofproto.OFPG_ANY)
+        dp.send_msg(mod)
+        print "Deleted flow cookie: {0} port: {1} ".format(str(entry.cookie), str(entry.port))
+
+    # Mark a port down and remove all associated flows
     def port_down(self,port):
         print "Port down : " + str(port)
         dropped_macs = [] 
