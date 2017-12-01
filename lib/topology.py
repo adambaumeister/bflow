@@ -146,6 +146,7 @@ class topology:
                 # Host port id is shitty at the moment so this may not always work!!
                 if not switch.port_is_peer(port):
                     switch.enable_broadcast(port)
+                    print "enabling broadcasts on host port {0} on {1}".format(switch.id, port)
 
 
 """
