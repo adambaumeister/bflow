@@ -193,6 +193,12 @@ class switch:
             return True
         else:
             return False
+    # Return link object by Port
+    def link_from_port(self, port):
+        if port in self.peer_links:
+            return self.peer_links[port]
+        else:
+            return False
 
     # Return links per peer
     def links_by_peer(self,peer_id):

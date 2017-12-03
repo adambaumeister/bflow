@@ -87,6 +87,8 @@ class topology:
                 self.drop_macs(dropped_macs)
                 if switch.port_is_peer(msg.desc.port_no):
                     print "Peer link down, recalculate forwarding"
+                    link = switch.link_from_port(msg.desc.port_no)
+                    self.path.remove_link(link)
                     self.calc_l2_forwarding()
             if link_up:
                 print "Link came up!"
@@ -106,7 +108,7 @@ class topology:
     # Calculate the l2 forwarding tables
     # This needs a lot of work. Currently clears out all broadcasts before starting again.
     def calc_l2_forwarding(self):
-        print "!!! Calculating l2 forwarding"
+        print "!!!  Calculating l2 forwarding"
         for id,switch in self.switches.items():
             for id2, switch2 in self.switches.items():
                 if id != id2:
@@ -204,6 +206,12 @@ class Path:
         self.graph.add_edge(link.local_id, link.remote_id, object=link)
         print "added edge: {0}{1}".format(link.local_id, link.remote_id)
 
+    def remove_link(self, link):
+        try:
+            self.graph.remove_edge(link.local_id, link.remote_id)
+        except nx.NetworkXError as e:
+            print "edge between {0} and {1} does not exist!".format(link.local_id, link.remote_id)
+
     # Run the spf algorithm and return all the links in the path
     def spf_links(self,start,end):
         links = []
@@ -260,5 +268,6 @@ class Path:
     # Run the SPF algorithm but just return the next hop link
     def next_hop(self,start,end):
         links = self.spf_links(start, end)
-        if len(links) > 0:
-            return links[0]
+        if links:
+            if len(links) > 0:
+                return links[0]
