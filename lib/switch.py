@@ -67,6 +67,10 @@ class switch:
         if entry: 
             self.flow_delete(entry)
 
+    # Delete all flows matching this mac address from this switch
+    def unlearn_mac_entry(self, entry):
+        self.flow_delete(entry)
+
     # Lean an entire table
     def learn_table(self,mac_table,port):
         #print "Learning table on port {0}".format(port)
@@ -186,19 +190,27 @@ class switch:
             self.peer_links[port] = Link
             return True
 
-
     # Check if port is a peer link
     def port_is_peer(self, port):
         if port in self.peer_links:
             return True
         else:
             return False
+
     # Return link object by Port
     def link_from_port(self, port):
         if port in self.peer_links:
             return self.peer_links[port]
         else:
             return False
+
+    # Unlearn all macs pointing down peer links
+    def drop_peer_link_macs(self):
+        for port, link in self.peer_links.items():
+            removed = self.mac_table.drop_port(port)
+            for entry in removed:
+                self.unlearn_mac_entry(entry)
+
 
     # Return links per peer
     def links_by_peer(self,peer_id):

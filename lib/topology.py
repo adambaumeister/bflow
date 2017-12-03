@@ -81,15 +81,18 @@ class topology:
             link_down = (msg.desc.state & ofproto.OFPPS_LINK_DOWN)
             link_up = (msg.desc.state & ofproto.OFPPS_LIVE)
             if link_down:
-                # Delete flows from the local switch
-                dropped_macs = switch.port_down(msg.desc.port_no)
-                # Delete this mac from the topology 
-                self.drop_macs(dropped_macs)
                 if switch.port_is_peer(msg.desc.port_no):
+                    # Drop all macs learnt on peer links
+                    self.drop_peer_macs()
                     print "Peer link down, recalculate forwarding"
                     link = switch.link_from_port(msg.desc.port_no)
                     self.path.remove_link(link)
                     self.calc_l2_forwarding()
+                else:
+                    # Delete flows from the local switch
+                    dropped_macs = switch.port_down(msg.desc.port_no)
+                    # Delete this mac from the topology
+                    self.drop_macs(dropped_macs)
             if link_up:
                 print "Link came up!"
         elif msg.reason == ofproto.OFPPR_ADD:
@@ -100,6 +103,11 @@ class topology:
         for mac in macs: 
             for id,switch in self.switches.items(): 
                 switch.unlearn_mac(mac)
+
+    # unlearn all macs from all peer links
+    def drop_peer_macs(self):
+        for id, switch in self.switches.items():
+            switch.drop_peer_link_macs()
 
     def dump(self):
         for id,switch in self.switches.items():
