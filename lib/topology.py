@@ -60,8 +60,9 @@ class topology:
             self.link_ref[local_switch_id][peer_switch_id] = l
 
         switch = self.get_switch(local_switch_id)
-        switch.add_peer_link(l, local_port)
-        self.calc_l2_forwarding()
+        # Only redo l2 forwarding if we've added a new peer link
+        if switch.add_peer_link(l, local_port):
+            self.calc_l2_forwarding()
 
     # Add a mac to the topology and learn it on the local switch
     def add_mac(self,id,mac,port):
@@ -105,6 +106,7 @@ class topology:
     # Calculate the l2 forwarding tables
     # This needs a lot of work. Currently clears out all broadcasts before starting again.
     def calc_l2_forwarding(self):
+        print "!!! Calculating l2 forwarding"
         for id,switch in self.switches.items():
             for id2, switch2 in self.switches.items():
                 if id != id2:

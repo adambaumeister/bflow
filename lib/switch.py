@@ -182,7 +182,10 @@ class switch:
 
     # Add a peer link (link to another switch...) to this switch
     def add_peer_link(self,Link,port):
-        self.peer_links[port] = Link
+        if port not in self.peer_links:
+            self.peer_links[port] = Link
+            return True
+
 
     # Check if port is a peer link
     def port_is_peer(self, port):
