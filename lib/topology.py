@@ -86,11 +86,12 @@ class topology:
                 if switch.port_is_peer(msg.desc.port_no):
                     # Drop all macs learnt on peer links
                     self.drop_peer_macs()
-                    print "Peer link down, recalculate forwarding"
+
                     link = switch.link_from_port(msg.desc.port_no)
                     # Remove this link from the link table
                     local_id = str(switch.id)
                     remote_id = str(link.remote_id)
+                    print "Peer link down, recalculate forwarding. Pop local {0} remote {1}".format(local_id, remote_id)
                     self.link_ref[local_id].pop(remote_id)
                     self.link_ref[remote_id].pop(local_id)
                     self.path.remove_link(link)
