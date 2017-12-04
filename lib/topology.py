@@ -231,6 +231,7 @@ class Path:
     def remove_link(self, link):
         try:
             self.graph.remove_edge(link.local_id, link.remote_id)
+            self.links.pop(link.link_id)
         except nx.NetworkXError as e:
             print "edge between {0} and {1} does not exist!".format(link.local_id, link.remote_id)
 
