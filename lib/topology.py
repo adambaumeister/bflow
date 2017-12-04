@@ -89,8 +89,10 @@ class topology:
                     print "Peer link down, recalculate forwarding"
                     link = switch.link_from_port(msg.desc.port_no)
                     # Remove this link from the link table
-                    self.link_ref[switch.id].pop(link.remote_id)
-                    self.link_ref[link.remote_id].pop(switch.id)
+                    local_id = str(switch.id)
+                    remote_id = str(link.remote_id)
+                    self.link_ref[local_id].pop(remote_id)
+                    self.link_ref[remote_id].pop(local_id)
                     self.path.remove_link(link)
                     switch.del_peer_link(msg.desc.port_no)
                     self.calc_l2_forwarding()
