@@ -62,6 +62,7 @@ class topology:
         switch = self.get_switch(local_switch_id)
         # Only redo l2 forwarding if we've added a new peer link
         if switch.add_peer_link(l, local_port):
+            self.drop_peer_macs()
             self.calc_l2_forwarding()
 
     # Add a mac to the topology and learn it on the local switch
