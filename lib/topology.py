@@ -46,6 +46,7 @@ class topology:
                 self.link_ref[local_switch_id][peer_switch_id] = l
             # Otherwise, grab the link object and add this switch as the other port on the other side
             else:
+                print "DEBUG: Exists"
                 l = self.link_ref[peer_switch_id][local_switch_id]
                 l.add_port(local_switch_id, local_port)
                 if local_switch_id not in self.link_ref:
@@ -133,9 +134,9 @@ class topology:
                 if id != id2:
                     try:
                         link = self.path.next_hop(str(id), str(id2))
-                        local_port = link.ports[str(id)]
-                        switch.learn_table(switch2.mac_table, local_port)
-                        #print "DEBUG:  Next hop to {0} is {1}".format(str(id2), link.local_port)
+                        if link:
+                            local_port = link.ports[str(id)]
+                            switch.learn_table(switch2.mac_table, local_port)
                     # Below is a little dangerous as we catch any key error, it's just a shortcut for now
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
