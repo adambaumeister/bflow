@@ -190,6 +190,12 @@ class switch:
             self.peer_links[port] = Link
             return True
 
+    # Remove a peer link
+    def del_peer_link(self, port):
+        if port in self.peer_links:
+            self.peer_links.pop(port)
+            return True
+
     # Check if port is a peer link
     def port_is_peer(self, port):
         if port in self.peer_links:

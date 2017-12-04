@@ -72,7 +72,7 @@ class topology:
             switch.push_all_flows()
 
     # Link handler, can be a p2p port or an edge port
-    def link_change(self,dp_id,msg): 
+    def link_change(self, dp_id, msg):
         switch = self.get_switch(dp_id) 
         ofproto = switch.ofproto
         if msg.reason == ofproto.OFPPR_DELETE:
@@ -87,6 +87,7 @@ class topology:
                     print "Peer link down, recalculate forwarding"
                     link = switch.link_from_port(msg.desc.port_no)
                     self.path.remove_link(link)
+                    switch.del_peer_link(msg.desc.port_no)
                     self.calc_l2_forwarding()
                 else:
                     # Delete flows from the local switch
