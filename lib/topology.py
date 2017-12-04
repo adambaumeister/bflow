@@ -32,6 +32,7 @@ class topology:
         return self.switches[id]
 
     # Add a link between devices
+    # Updates the link_ref database
     def add_link(self,local_switch_id,peer_switch_id,local_port):
         local_switch_id = str(local_switch_id)
         peer_switch_id = str(peer_switch_id)
@@ -87,6 +88,9 @@ class topology:
                     self.drop_peer_macs()
                     print "Peer link down, recalculate forwarding"
                     link = switch.link_from_port(msg.desc.port_no)
+                    # Remove this link from the link table
+                    self.link_ref[switch.id].pop(link.remote_id)
+                    self.link_ref[link.remote_id].pop(switch.id)
                     self.path.remove_link(link)
                     switch.del_peer_link(msg.desc.port_no)
                     self.calc_l2_forwarding()
