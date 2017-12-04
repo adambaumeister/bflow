@@ -126,6 +126,7 @@ class topology:
                         link = self.path.next_hop(str(id), str(id2))
                         local_port = link.ports[str(id)]
                         switch.learn_table(switch2.mac_table, local_port)
+                        print "DEBUG:  Next hop to {0} is {1}".format(str(id2), link.local_port)
                     # Below is a little dangerous as we catch any key error, it's just a shortcut for now
                     except KeyError as e:
                         print "No path between {0} and {1}!".format(id,id2)
