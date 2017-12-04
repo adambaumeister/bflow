@@ -41,6 +41,7 @@ class topology:
         if peer_switch_id in self.link_ref:
             # If this link hasn't been created already
             if local_switch_id not in self.link_ref[peer_switch_id]:
+                print "DEBUG: {0} -> {1} doesn't Exists".format(peer_switch_id, local_switch_id)
                 l = Link(local_switch_id, peer_switch_id, local_port)
                 self.path.add_link(l)
                 self.link_ref[local_switch_id][peer_switch_id] = l
