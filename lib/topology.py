@@ -46,7 +46,7 @@ class topology:
                 self.link_ref[local_switch_id][peer_switch_id] = l
             # Otherwise, grab the link object and add this switch as the other port on the other side
             else:
-                print "DEBUG: Exists"
+                print "DEBUG: {0} -> {1} Exists".format(peer_switch_id, local_switch_id)
                 l = self.link_ref[peer_switch_id][local_switch_id]
                 l.add_port(local_switch_id, local_port)
                 if local_switch_id not in self.link_ref:
