@@ -1,0 +1,10 @@
+message Get {
+    message MacTable {
+        optional string id = 1 [default = ALL];
+        enum type {
+            NORMAL = 0;
+            DETAILED = 1;
+        }
+        optional QueryType type = 2;
+    }
+}
