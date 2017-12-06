@@ -1,12 +1,14 @@
 """
 GRPC Server for testing purposes
 """
-import bflow_pb2_grpc
-import bflow_pb2
-from concurrent import futures
 import time
 
 import grpc
+from concurrent import futures
+
+import bflow_pb2
+import bflow_pb2_grpc
+
 
 class TableQueryServicer(bflow_pb2_grpc.TableQueryServicer):
     def __init__(self):
