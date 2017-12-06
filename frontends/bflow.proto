@@ -1,10 +1,17 @@
-message Get {
-    message MacTable {
-        optional string id = 1 [default = ALL];
-        enum type {
-            NORMAL = 0;
-            DETAILED = 1;
-        }
-        optional QueryType type = 2;
+syntax = "proto3";
+service TableQuery {
+    rpc GetMacTable(MacTableQuery) returns (stream MacTableEntry) {}
+}
+message MacTableQuery {
+    string switch = 1;
+    enum type {
+        NORMAL = 0;
+        DETAILED = 1;
     }
+    type QueryType = 2;
+}
+message MacTableEntry {
+    string switch = 1;
+    string port = 2;
+    string mac = 3;
 }
