@@ -1,12 +1,15 @@
 import socket
 import struct
+import bflow_pb2 as pb
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.bind(('localhost', 50001))
 serversocket.listen(5)
+# First block is here - we're waiting for a connection.
 connection, address = serversocket.accept()
 
 while True:
+    #Second block is below, we're waiting to receive data
     print "Listening for messages"
     # Read, from the first message, the total length of the message we are expecting in serialized format
     message_length_packed = connection.recv(4)
@@ -14,8 +17,11 @@ while True:
         # Unpack that into the actual message length
         message_length = struct.unpack('>I', message_length_packed)[0]
         # Now take the message now that we know how long the dang ol' thing is man
+        # This is also the last block of this program
         message = connection.recv(message_length)
-        print message
+        query = pb.MacTableQuery()
+        query.ParseFromString(message)
+        print query.switch
     else:
         print "bad message, socket closed, or socket error."
         break
