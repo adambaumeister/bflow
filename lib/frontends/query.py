@@ -24,7 +24,7 @@ class QueryResponder:
         server.add_insecure_port('[::]:50001')
         self.server = server
 
-    def serve(self, topology):
+    def serve(self):
         self.server.start()
         print "Started"
         try:
