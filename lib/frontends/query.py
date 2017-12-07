@@ -11,6 +11,7 @@ from concurrent import futures
 
 import bflow_pb2
 import bflow_pb2_grpc
+from ryu.lib import hub
 """
 Serves queries for topology information
 """
@@ -28,6 +29,9 @@ class QueryResponder:
                 time.sleep(3600)
         except KeyboardInterrupt:
             server.stop(0)
+
+    def start(self, topology):
+        hub.spawn(self.serve(topology))
 
 
 class TableQueryServicer(bflow_pb2_grpc.TableQueryServicer):

@@ -9,6 +9,7 @@ from lib.topology import topology
 from lib.switch import switch 
 from lib.protocols.lldp import LLDP
 import lib.frontends.query as query
+
 import pprint
 
 # Define your class which is a RYU application
@@ -22,7 +23,7 @@ class ofnetwork(app_manager.RyuApp):
         self.topo = topology('testing')
         # Enable GRPC query responder
         query_responder = query.QueryResponder()
-        query_responder.serve(self.topo)
+        query_responder.start(self.topo)
 
     # Decorator, passes switch_featues_handler to set_ev_cls as EventOFPSwitchFeatures
     # CONFIG_DISPATCHER references the phase of negotiation with the Openflow switch
