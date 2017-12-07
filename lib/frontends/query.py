@@ -25,7 +25,7 @@ class QueryResponder:
         self.server = server
 
     def serve(self):
-        self.server.start()
+        #self.server.start()
         print "Started"
         try:
             while True:
