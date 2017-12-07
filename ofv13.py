@@ -22,8 +22,8 @@ class ofnetwork(app_manager.RyuApp):
         # init topoloy
         self.topo = topology('testing')
         # Enable GRPC query responder
-        query_responder = query.QueryResponder()
-        query_responder.start(self.topo)
+        query_responder = query.QueryResponder(self.topo)
+        query_responder.start()
 
     # Decorator, passes switch_featues_handler to set_ev_cls as EventOFPSwitchFeatures
     # CONFIG_DISPATCHER references the phase of negotiation with the Openflow switch

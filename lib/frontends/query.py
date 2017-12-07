@@ -16,22 +16,25 @@ from ryu.lib import hub
 Serves queries for topology information
 """
 class QueryResponder:
-    def serve(self, topology):
+    def __init__(self, topology):
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         bflow_pb2_grpc.add_TableQueryServicer_to_server(
             TableQueryServicer(topology), server
         )
         server.add_insecure_port('[::]:50001')
-        server.start()
+        self.server = server
+
+    def serve(self, topology):
+        self.server.start()
         print "Started"
         try:
             while True:
                 time.sleep(3600)
         except KeyboardInterrupt:
-            server.stop(0)
+            self.server.stop(0)
 
     def start(self, topology):
-        hub.spawn(self.serve(topology))
+        hub.spawn(self.serve)
 
 
 class TableQueryServicer(bflow_pb2_grpc.TableQueryServicer):
