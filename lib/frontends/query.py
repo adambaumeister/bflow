@@ -25,7 +25,7 @@ class QueryResponder:
         self.server = server
 
     def serve(self):
-        #self.server.start()
+        self.server.start()
         print "Started"
         try:
             while True:
@@ -35,6 +35,7 @@ class QueryResponder:
 
     def start(self):
         hub.spawn(self.serve)
+        return
 
 
 class TableQueryServicer(bflow_pb2_grpc.TableQueryServicer):
