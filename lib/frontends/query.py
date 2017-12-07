@@ -33,7 +33,7 @@ class QueryResponder:
         except KeyboardInterrupt:
             self.server.stop(0)
 
-    def start(self, topology):
+    def start(self):
         hub.spawn(self.serve)
 
 
