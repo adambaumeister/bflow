@@ -7,9 +7,9 @@ from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, arp,lldp 
 from lib.topology import topology
 from lib.switch import switch 
-from lib.protocols.lldp import LLDP  
+from lib.protocols.lldp import LLDP
+import lib.frontends.query as query
 import pprint
-
 
 # Define your class which is a RYU application
 class ofnetwork(app_manager.RyuApp):
@@ -34,6 +34,10 @@ class ofnetwork(app_manager.RyuApp):
         # Enable protocols 
         self.proto_lldp = s.protocol_enable(LLDP) 
         self.topo.add_switch(s)
+        # Enable GRPC query responder
+        query_responder = query.QueryResponder()
+        query_responder.serve(self.topo)
+
 
     # Handle port status changes
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)

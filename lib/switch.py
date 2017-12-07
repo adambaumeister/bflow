@@ -179,10 +179,10 @@ class switch:
         return dropped_macs
 
     # Run protocols
-    def protocol_enable(self,module):
+    def protocol_enable(self, module):
         m = module(self)
         thread = hub.spawn(m.start)
-        return(m)
+        return m
 
     # Add a peer link (link to another switch...) to this switch
     def add_peer_link(self,Link,port):
