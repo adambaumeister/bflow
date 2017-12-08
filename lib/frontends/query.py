@@ -46,7 +46,7 @@ class QueryResponder:
                 query = pb.MessageParser()
                 query.ParseFromString(message)
                 # Route to Correct function and return the response object and length
-                messages = self.function_map[query.function](message)
+                messages = self.function_map[query.function](query)
                 self.send_response(connection, messages)
 
             else:
@@ -57,12 +57,16 @@ class QueryResponder:
         hub.spawn(self.serve)
         return
 
-    def get_mac_table(self, message):
-        entry = pb.MacTableEntry()
-        entry.mac = "ss:pp:aa:gh:et"
-        entry.port = "99"
-        entry.switch = "1"
-        messages = [entry, entry]
+    def get_mac_table(self, query):
+        switch_id = query.switch
+        switch = self.topology.get_switch(switch_id)
+        messages = []
+        for e in switch.mac_table.get_local_entries():
+            entry = pb.MacTableEntry()
+            entry.mac = e.mac
+            entry.port = e.port
+            entry.switch = switch_id
+            messages.append(entry)
         return messages
 
     def send_response(self, connection, messages):
