@@ -1,8 +1,10 @@
 """
 Query Module
 
-gRPC responder for bFlow queries
+Socket-based responder for bFlow queries
 Used to retrieve information about the bFlow tables
+
+Wondering why this doesn't use gRPC? gRPC threading isn't supported within green threads.
 """
 import time
 import bflow_pb2 as pb
@@ -12,9 +14,15 @@ from ryu.lib import hub
 """
 Serves queries for topology information
 """
+
+
 class QueryResponder:
     def __init__(self, topology):
         self.topology = topology
+        # Supported functions
+        self.function_map = {
+            'GetMacTable': self.get_mac_table
+        }
 
     def serve(self):
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,9 +42,13 @@ class QueryResponder:
                 # Now take the message now that we know how long the dang ol' thing is man
                 # This is also the last block of this program
                 message = connection.recv(message_length)
-                query = pb.MacTableQuery()
+                # Parse the message using the generic parser
+                query = pb.MessageParser()
                 query.ParseFromString(message)
-                print query.switch
+                # Route to Correct function and return the response object and length
+                messages = self.function_map[query.function](message)
+                self.send_response(connection, messages)
+
             else:
                 print "bad message, socket closed, or socket error."
                 break
@@ -45,3 +57,24 @@ class QueryResponder:
         hub.spawn(self.serve)
         return
 
+    def get_mac_table(self, message):
+        entry = pb.MacTableEntry()
+        entry.mac = "ss:pp:aa:gh:et"
+        entry.port = "99"
+        entry.switch = "1"
+        messages = [entry, entry]
+        return messages
+
+    def send_response(self, connection, messages):
+        for message in messages:
+            m = message.SerializeToString()
+            length = len(m)
+            # Serialize message length, >I means big endian unsigned int which is always 4 bytes long
+            packed = struct.pack('>I', length)
+            # Send the length over the connection
+            connection.send(packed)
+            # Now, send the actual message
+            connection.send(m)
+        # Send the EOF message as a 0 byte
+        packed = struct.pack('>I', 0)
+        connection.send(packed)

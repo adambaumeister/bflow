@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='bflow.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x0b\x62\x66low.proto\"i\n\rMacTableQuery\x12\x0e\n\x06switch\x18\x01 \x01(\t\x12&\n\tQueryType\x18\x02 \x01(\x0e\x32\x13.MacTableQuery.type\" \n\x04type\x12\n\n\x06NORMAL\x10\x00\x12\x0c\n\x08\x44\x45TAILED\x10\x01\":\n\rMacTableEntry\x12\x0e\n\x06switch\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\t\x12\x0b\n\x03mac\x18\x03 \x01(\t2?\n\nTableQuery\x12\x31\n\x0bGetMacTable\x12\x0e.MacTableQuery\x1a\x0e.MacTableEntry\"\x00\x30\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0b\x62\x66low.proto\"!\n\rMessageParser\x12\x10\n\x08\x66unction\x18\x01 \x01(\t\"{\n\rMacTableQuery\x12\x10\n\x08\x66unction\x18\x01 \x01(\t\x12\x0e\n\x06switch\x18\x02 \x01(\t\x12&\n\tQueryType\x18\x03 \x01(\x0e\x32\x13.MacTableQuery.type\" \n\x04type\x12\n\n\x06NORMAL\x10\x00\x12\x0c\n\x08\x44\x45TAILED\x10\x01\"L\n\rMacTableEntry\x12\x10\n\x08\x66unction\x18\x01 \x01(\t\x12\x0e\n\x06switch\x18\x02 \x01(\t\x12\x0c\n\x04port\x18\x03 \x01(\t\x12\x0b\n\x03mac\x18\x04 \x01(\tb\x06proto3')
 )
 
 
@@ -41,10 +41,41 @@ _MACTABLEQUERY_TYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=88,
-  serialized_end=120,
+  serialized_start=141,
+  serialized_end=173,
 )
 _sym_db.RegisterEnumDescriptor(_MACTABLEQUERY_TYPE)
+
+
+_MESSAGEPARSER = _descriptor.Descriptor(
+  name='MessageParser',
+  full_name='MessageParser',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='function', full_name='MessageParser.function', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=15,
+  serialized_end=48,
+)
 
 
 _MACTABLEQUERY = _descriptor.Descriptor(
@@ -55,15 +86,22 @@ _MACTABLEQUERY = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='switch', full_name='MacTableQuery.switch', index=0,
+      name='function', full_name='MacTableQuery.function', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='QueryType', full_name='MacTableQuery.QueryType', index=1,
-      number=2, type=14, cpp_type=8, label=1,
+      name='switch', full_name='MacTableQuery.switch', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='QueryType', full_name='MacTableQuery.QueryType', index=2,
+      number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -81,8 +119,8 @@ _MACTABLEQUERY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=15,
-  serialized_end=120,
+  serialized_start=50,
+  serialized_end=173,
 )
 
 
@@ -94,22 +132,29 @@ _MACTABLEENTRY = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='switch', full_name='MacTableEntry.switch', index=0,
+      name='function', full_name='MacTableEntry.function', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='port', full_name='MacTableEntry.port', index=1,
+      name='switch', full_name='MacTableEntry.switch', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='mac', full_name='MacTableEntry.mac', index=2,
+      name='port', full_name='MacTableEntry.port', index=2,
       number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='mac', full_name='MacTableEntry.mac', index=3,
+      number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -126,15 +171,23 @@ _MACTABLEENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=122,
-  serialized_end=180,
+  serialized_start=175,
+  serialized_end=251,
 )
 
 _MACTABLEQUERY.fields_by_name['QueryType'].enum_type = _MACTABLEQUERY_TYPE
 _MACTABLEQUERY_TYPE.containing_type = _MACTABLEQUERY
+DESCRIPTOR.message_types_by_name['MessageParser'] = _MESSAGEPARSER
 DESCRIPTOR.message_types_by_name['MacTableQuery'] = _MACTABLEQUERY
 DESCRIPTOR.message_types_by_name['MacTableEntry'] = _MACTABLEENTRY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+MessageParser = _reflection.GeneratedProtocolMessageType('MessageParser', (_message.Message,), dict(
+  DESCRIPTOR = _MESSAGEPARSER,
+  __module__ = 'bflow_pb2'
+  # @@protoc_insertion_point(class_scope:MessageParser)
+  ))
+_sym_db.RegisterMessage(MessageParser)
 
 MacTableQuery = _reflection.GeneratedProtocolMessageType('MacTableQuery', (_message.Message,), dict(
   DESCRIPTOR = _MACTABLEQUERY,
@@ -150,29 +203,5 @@ MacTableEntry = _reflection.GeneratedProtocolMessageType('MacTableEntry', (_mess
   ))
 _sym_db.RegisterMessage(MacTableEntry)
 
-
-
-_TABLEQUERY = _descriptor.ServiceDescriptor(
-  name='TableQuery',
-  full_name='TableQuery',
-  file=DESCRIPTOR,
-  index=0,
-  options=None,
-  serialized_start=182,
-  serialized_end=245,
-  methods=[
-  _descriptor.MethodDescriptor(
-    name='GetMacTable',
-    full_name='TableQuery.GetMacTable',
-    index=0,
-    containing_service=None,
-    input_type=_MACTABLEQUERY,
-    output_type=_MACTABLEENTRY,
-    options=None,
-  ),
-])
-_sym_db.RegisterServiceDescriptor(_TABLEQUERY)
-
-DESCRIPTOR.services_by_name['TableQuery'] = _TABLEQUERY
 
 # @@protoc_insertion_point(module_scope)

@@ -1,17 +1,20 @@
 syntax = "proto3";
-service TableQuery {
-    rpc GetMacTable(MacTableQuery) returns (stream MacTableEntry) {}
+
+message MessageParser {
+    string function = 1;
 }
 message MacTableQuery {
-    string switch = 1;
+    string function = 1;
+    string switch = 2;
     enum type {
         NORMAL = 0;
         DETAILED = 1;
     }
-    type QueryType = 2;
+    type QueryType = 3;
 }
 message MacTableEntry {
-    string switch = 1;
-    string port = 2;
-    string mac = 3;
+    string function = 1;
+    string switch = 2;
+    string port = 3;
+    string mac = 4;
 }
