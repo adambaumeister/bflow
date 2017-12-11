@@ -5,7 +5,7 @@ import bflow_pb2 as pb
 
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 clientsocket.connect(('localhost', 50001))
-query = pb.MacTableQuery(function='GetMacTable', switch='99', QueryType='NORMAL')
+query = pb.MacTableQuery(function='GetMacTable', switch='1', QueryType='NORMAL')
 m = query.SerializeToString()
 # Check length of message
 length = len(m)
