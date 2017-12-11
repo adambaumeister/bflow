@@ -66,8 +66,8 @@ class QueryResponder:
         for e in switch.mac_table.get_local_entries():
             entry = pb.MacTableEntry()
             entry.mac = e.mac
-            entry.port = int(e.port)
-            entry.switch = int(switch_id)
+            entry.port = str(e.port)
+            entry.switch = str(switch_id)
             messages.append(entry)
         return messages
 
