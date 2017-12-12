@@ -1,5 +1,5 @@
-import query
+import responder
 
-query_responder = query.QueryResponder("none")
+query_responder = responder.QueryResponder("none")
 query_responder.serve()
 

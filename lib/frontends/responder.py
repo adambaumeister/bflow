@@ -31,9 +31,13 @@ class QueryResponder:
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         serversocket.bind((self.bind_addr, self.port))
         serversocket.listen(5)
-        # First block is here - we're waiting for a connection.
-        connection, address = serversocket.accept()
+        while True:
+            # First block is here - we're waiting for a connection.
+            connection, address = serversocket.accept()
+            # When someone connects, dispatch to handler
+            self.dispatch(connection, address)
 
+    def dispatch(self, connection, address):
         while True:
             # Second block is below, we're waiting to receive data
             print "Listening for messages"
@@ -53,8 +57,8 @@ class QueryResponder:
                 self.send_response(connection, messages)
 
             else:
-                print "bad message, socket closed, or socket error."
-                break
+                print "bad message, socket closed, or socket error from {0}".format(address)
+                return
 
     def start(self):
         hub.spawn(self.serve)

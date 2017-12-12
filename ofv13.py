@@ -8,7 +8,7 @@ from ryu.lib.packet import packet, ethernet, arp,lldp
 from lib.topology import topology
 from lib.switch import switch 
 from lib.protocols.lldp import LLDP
-import lib.frontends.query as query
+import lib.frontends.responder as query
 
 import pprint
 
