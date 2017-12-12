@@ -21,12 +21,15 @@ class QueryResponder:
         self.topology = topology
         # Supported functions
         self.function_map = {
+            'ConnectionInfo': self.conn_info,
             'GetMacTable': self.get_mac_table
         }
+        self.port = 2222
+        self.bind_addr = 'localhost'
 
     def serve(self):
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        serversocket.bind(('localhost', 50001))
+        serversocket.bind((self.bind_addr, self.port))
         serversocket.listen(5)
         # First block is here - we're waiting for a connection.
         connection, address = serversocket.accept()
@@ -56,6 +59,14 @@ class QueryResponder:
     def start(self):
         hub.spawn(self.serve)
         return
+
+    def conn_info(self, message):
+        generic = pb.GenericResponse()
+        conn_info = 'Hi! You are connected to the bflow server running on {0}:{1}. Thanks!'.format(self.bind_addr,
+                                                                                                   self.port)
+        generic.data = conn_info
+        messages = [generic]
+        return messages
 
     def get_mac_table(self, message):
         query = pb.MacTableQuery()
