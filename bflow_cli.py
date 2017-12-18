@@ -35,13 +35,18 @@ class Input:
         self.passed_args = args[0].split(" ")
         self.dispatcher = {
             'ConnectionInfo': self.connection_info,
-            'GetMacTable': self.get_mac_table,
+            'MacTable': self.get_mac_table,
         }
+        self.command = ''
 
     def route(self):
         command = self.passed_args[0]
-        print command
         self.passed_args.pop(0)
+        if command not in self.dispatcher:
+            print "Command not found '{0}'".format(command)
+            return
+
+        self.command = command
         self.dispatcher[command]()
 
     def connection_info(self):
@@ -55,9 +60,35 @@ class Input:
     def parse_args(self, required, optional, descriptions):
         required_length = len(optional)
         arg_length = len(self.passed_args)
-        if arg_length >= required_length:
-            print "Yep"
 
+        dict = {}
+        if arg_length > 0:
+            if self.passed_args[0] == '?':
+                self.command_help(required, optional)
+                return
+        else:
+            self.command_help(required, optional)
+            return
+
+        # assign required arguments to dictionary
+        i = 0
+        if arg_length >= required_length:
+            for arg in required:
+                dict[arg] = self.passed_args[i]
+                i += 1
+        else:
+            for arg in required:
+                print "Missing required argument {0}".format(arg)
+
+        # If there are still args left, assign them to optional attributes
+        if i < arg_length:
+            for arg in optional:
+                dict[arg] = self.passed_args[i]
+
+        return dict
+
+    def command_help(self, required, optional):
+        print "Usage: {0} [{1}] ({2})".format(self.command, ",".join(required), ",".join(optional))
 
     def get_mac_table(self):
         required = [
@@ -70,7 +101,8 @@ class Input:
             'Switch OpenFlow ID',
             'Query type [NORMAL|DETAILED]'
         ]
-        self.parse_args(required, optional, descriptions)
+        dict = self.parse_args(required, optional, descriptions)
+        print dict['switch']
 
 querier = Querier(remote_addr='localhost', remote_port=2222)
 querier.connect()
