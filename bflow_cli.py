@@ -103,6 +103,19 @@ class Input:
         ]
         dict = self.parse_args(required, optional, descriptions)
         print dict['switch']
+        query = pb.MacTableQuery(
+            function='GetMacTable',
+            switch=dict['switch'],
+            QueryType='0'
+        )
+        responses = querier.send(query)
+        for message in responses:
+            query_response = pb.MacTableEntry()
+            query_response.ParseFromString(message)
+            switch = query_response.switch
+            mac = query_response.mac
+            port = query_response.port
+            print "{0},{1},{2}".format(switch,mac,port)
 
 querier = Querier(remote_addr='localhost', remote_port=2222)
 querier.connect()
