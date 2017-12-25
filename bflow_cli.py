@@ -106,7 +106,7 @@ class Input:
         query = pb.MacTableQuery(
             function='GetMacTable',
             switch=dict['switch'],
-            QueryType='0'
+            QueryType=0
         )
         responses = querier.send(query)
         for message in responses:
