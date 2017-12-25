@@ -102,7 +102,6 @@ class Input:
             'Query type [NORMAL|DETAILED]'
         ]
         dict = self.parse_args(required, optional, descriptions)
-        print dict['switch']
         query = pb.MacTableQuery(
             function='GetMacTable',
             switch=dict['switch'],
@@ -116,6 +115,22 @@ class Input:
             mac = query_response.mac
             port = query_response.port
             print "{0},{1},{2}".format(switch,mac,port)
+
+    def add_router(self):
+        required = [
+            'id',
+            'name'
+        ]
+        optional = [
+        ]
+        descriptions = [
+            'Router id - matches OpenFlow ID',
+            'Name - Descriptive name of router'
+
+        ]
+        dict = self.parse_args(required, optional, descriptions)
+
+
 
 querier = Querier(remote_addr='localhost', remote_port=2222)
 querier.connect()

@@ -11,6 +11,18 @@ message GenericResponse {
     string function = 1;
     string data = 2;
 }
+message AddRouter {
+    string function = 1;
+    string id = 2;
+    string name = 3;
+}
+message AddSubnet {
+    string function = 1;
+    string id = 2;
+    string router = 3;
+    string subnet = 4;
+    string interface = 5;
+}
 message MacTableQuery {
     string function = 1;
     string switch = 2;
