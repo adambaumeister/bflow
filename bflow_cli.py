@@ -129,7 +129,17 @@ class Input:
 
         ]
         dict = self.parse_args(required, optional, descriptions)
-
+        query = pb.AddRouter(
+            function='AddRouter',
+            id=dict['id'],
+            name=dict['name']
+        )
+        responses = querier.send(query)
+        for message in responses:
+            query_response = pb.GenericResponse()
+            query_response.ParseFromString(message)
+            status = query_response.data
+            print status
 
 
 querier = Querier(remote_addr='localhost', remote_port=2222)
